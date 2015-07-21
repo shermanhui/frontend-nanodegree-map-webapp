@@ -14,6 +14,7 @@ Project Objectives:
 	- Display/Find using GoogleMaps API
 	- Search for Dive Sites/Scuba Diving APIs on the web
 - Use Instagram API to upload relevant photos 
+- Explore other API options 
 
 ## How will I complete this Project?
 
@@ -49,3 +50,8 @@ You will learn how design patterns assist in developing a manageable codebase. Y
 
 Interacting with API servers is the primary function of Front-End Web Developers
 Use of third-party libraries and APIs is a standard and acceptable practice that is encouraged
+
+## Contribute
+
+- Issue Tracker: https://github.com/shui91/frontend-nanodegree-map-webapp/issues
+- Source Code: https://github.com/shui91/frontend-nanodegree-map-webapp/
