@@ -31,16 +31,17 @@ function viewModel() {
 		vancouver = {lat: 49.2827, lng: -123.1207};
 		mapContainer = document.getElementById('map');
 
-		map = google.maps.Map(options, mapContainer);
 		options = {
 			center: vancouver,
 			zoom: 14,
 			disableDefaultUI: true
 		};
+		map = google.maps.Map(mapContainer, options);
 
-		return new google.maps.Map(options, mapContainer);
+		return new map;
 	};
 
+	this.initMap;
 }
 
 
