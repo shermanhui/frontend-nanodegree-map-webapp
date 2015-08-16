@@ -9,41 +9,22 @@ var map;
 // 	});
 // }
 
-// var initLocations = [
-// 	{
-// 		"name": "Vancouver",
-// 		"lat": 49.2827,
-// 		"lng": -123.1207
-// 	}	
-// ];
-
-// var Location = function(data){
-// 	this.name = ko.observable(data.name);
-// 	this.lat = ko.observable(data.lat);
-// 	this.lng = ko.observable(data.lng);
-// };
-
-function viewModel() {
+var viewModel = function() {
 	var self = this;
-	function initMap(){
-		var options, mapContainer, vancouver;
 
-		vancouver = {lat: 49.2827, lng: -123.1207};
-		mapContainer = document.getElementById('map');
+	var options, mapContainer;
 
-		options = {
-			center: vancouver,
-			zoom: 14,
-			disableDefaultUI: true
-		};
-		map = google.maps.Map(mapContainer, options);
-
-		return new map;
+	var myLocation = new google.maps.LatLng(49.2827, -123.1207);
+		// vancouver = {lat: 49.2827, lng: -123.1207};
+	mapContainer = document.getElementById('map');
+	options = {
+		center: myLocation,
+		zoom: 14,
+		disableDefaultUI: true
 	};
+	map = new google.maps.Map(mapContainer, options);
 
-	this.initMap;
-}
-
-
+	return map;
+};
 
 ko.applyBindings(new viewModel());
