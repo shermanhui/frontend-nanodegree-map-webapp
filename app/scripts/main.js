@@ -9,23 +9,40 @@ var map;
 // 	});
 // }
 
+// var initLocations = [
+// 	{
+// 		"name": "Vancouver",
+// 		"lat": 49.2827,
+// 		"lng": -123.1207
+// 	}	
+// ];
+
+// var Location = function(data){
+// 	this.name = ko.observable(data.name);
+// 	this.lat = ko.observable(data.lat);
+// 	this.lng = ko.observable(data.lng);
+// };
+
 function viewModel() {
-
+	var self = this;
 	function initMap(){
-		var options, mapContainer, vancouver
+		var options, mapContainer, vancouver;
 
+		vancouver = {lat: 49.2827, lng: -123.1207};
+		mapContainer = document.getElementById('map');
+
+		map = google.maps.Map(options, mapContainer);
 		options = {
-			vancouver: {lat: 49.2827, lng: -123.1207},
 			center: vancouver,
 			zoom: 14,
 			disableDefaultUI: true
 		};
 
-		mapContainer = document.getElementById('map');
-
 		return new google.maps.Map(options, mapContainer);
 	};
+
 }
+
 
 
 ko.applyBindings(new viewModel());
