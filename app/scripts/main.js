@@ -12,12 +12,11 @@ var map;
 
 var viewModel = function() {
 	var self = this;
-
 	var options, mapContainer, myLocation;
-	
-	myLocation = new google.maps.LatLng(49.2827, -123.1207);
+
 	// vancouver = {lat: 49.2827, lng: -123.1207};
 	self.initMap = function(){
+		myLocation = new google.maps.LatLng(49.2827, -123.1207);
 		mapContainer = document.getElementById('map');
 
 		options = {
