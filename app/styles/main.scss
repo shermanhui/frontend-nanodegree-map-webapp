@@ -10,9 +10,13 @@ $icon-font-path: '../fonts/';
   color: #000;
   padding: 0.2em 0;
 }
+html {
+  height: 100%;
+}
 
 /* Space out content a bit */
 body {
+  height: 100%;
   padding-top: 20px;
   padding-bottom: 20px;
 }
@@ -93,12 +97,14 @@ body {
 }
 
 /* Begin Custom CSS - Sherman */
-html,
-body {
-  height: 100%;
-}
-
 #map { 
   height: 100%;
 }
 
+#search-bar {
+  display: block;
+}
+
+#search-bar-div {
+  
+}
