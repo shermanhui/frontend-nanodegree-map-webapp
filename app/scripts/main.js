@@ -1,55 +1,84 @@
 var map;
+var myLatlng = {lat: 49.2844, lng: -123.1089};
+var markers = [
+	{
+		'name': "Steam Clock",
+		'lat': 49.2844,
+		'lng': -123.1089
+	},
+	{
+		'name': "Aquarium",
+		'lat': 49.301286,
+		'lng': -123.130843
+	},
+	{
+		'name': "Science World",
+		'lat': 49.273513,
+		'lng': -123.103834
+	}
+]
 
 // original code from Google Maps API
 function initMap() {
 	var vancouver = {lat: 49.2827, lng: -123.1207};
+	var bounds = new google.maps.LatLngBounds();
+	var infoWindow = new google.maps.InfoWindow();
+	//var bounce = toggleBounce();
+	var marker, i;
 	map = new google.maps.Map(document.getElementById('map'), {
 		center: vancouver,
 		zoom: 14,
 		disableDefaultUI: true
 	});
-	marker.addListener('click', toggleBounce);
-	marker.addListener('click', function(){
-		infoWindow.open(map, marker)
+	// marker.addListener('click', toggleBounce);
+	// marker.addListener('click', function(){
+	// 	toggleBounce;
+	// 	infoWindow.open(map, marker)
+	// });
+	// marker.setMap(map); // To add the marker to the map, call setMap();
+	for (i = 0; i < markers.length; i++){
+		marker = new google.maps.Marker({
+		position: new google.maps.LatLng(markers[i].lat, markers[i].lng),
+		map: map
 	});
-	marker.setMap(map); // To add the marker to the map, call setMap();
+		google.maps.event.addListener(marker, 'click', (function(marker, i){
+			return function(){
+				var contentString =
+					'<div id="content">'+
+					'<div id="siteNotice">'+
+					'</div>'+
+					'<h1 id="firstHeading" class="firstHeading">'+ markers[i].name +'</h1>'+
+					'<div id="bodyContent">'+
+					'<p><b>Interesting location description</b></p>'+
+					'<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
+					'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
+					'(last visited June 22, 2009).</p>'+
+					'</div>'+
+					'</div>';
+				infoWindow.setContent(contentString);
+				infoWindow.open(map, marker);
+			}
+		})(marker, i));
+	};
+	// function toggleBounce() {
+	// 	if (marker.getAnimation() !== null) {
+	// 		marker.setAnimation(null);
+	// 	} else {
+	// 		marker.setAnimation(google.maps.Animation.BOUNCE);
+	// 	}
+	// };
 }
+// // marker code
+// var marker = new google.maps.Marker({
+//     position: myLatlng,
+//     title:"Hello World!",
+//     draggable: false,
+//     animation: google.maps.Animation.DROP
+// });
 
-var myLatlng = {lat: 49.2844, lng: -123.1089};
 
-// marker code 
-var marker = new google.maps.Marker({
-    position: myLatlng,
-    title:"Hello World!",
-    draggable: false,
-    animation: google.maps.Animation.DROP
-});
 
-// info window template
-var contentString = '<div id="content">'+
-      '<div id="siteNotice">'+
-      '</div>'+
-      '<h1 id="firstHeading" class="firstHeading">Gastown Steam Clock</h1>'+
-      '<div id="bodyContent">'+
-      '<p><b>Interesting location description</b></p>'+
-      '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-      'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-      '(last visited June 22, 2009).</p>'+
-      '</div>'+
-      '</div>';
 
-// info window
-var infoWindow = new google.maps.InfoWindow({
-	content: contentString
-})
-
-function toggleBounce() {
-  if (marker.getAnimation() !== null) {
-    marker.setAnimation(null);
-  } else {
-    marker.setAnimation(google.maps.Animation.BOUNCE);
-  }
-}
 initMap();
 
 
@@ -58,7 +87,7 @@ initMap();
 
 // var exampleData = [
 // 	{
-// 		'lat': 49.2844, 
+// 		'lat': 49.2844,
 // 		'lng': -123.1089,
 // 		'name': "steam clock"
 // 	}
