@@ -44,12 +44,19 @@
       </div>
       </div>
     </div>
-    <div id='map'>      <ul class='list-group'>
-        <li class='list-group-item'>1</li>
-        <li class='list-group-item'>1</li>
-        <li class='list-group-item'>1</li>
-      </ul></div>
-
+    <div class="container-fluid">
+        <button type="button" class="hamburger is-closed pull-right" data-toggle="offcanvas">
+        <span class="hamb-top"></span>
+        <span class="hamb-middle"></span>
+        <span class="hamb-bottom"></span>
+      </button>
+      <div class="col-md-12 center-block" id='map'></div>
+      <div class="col-md-3 pull-right" id='list'>
+        <ul class='list-group' data-bind="foreach: locationsList">
+          <li class='list-group-item'><span data-bind="text: name"></span></li>
+        </ul>
+      </div>
+    </div>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
       (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=

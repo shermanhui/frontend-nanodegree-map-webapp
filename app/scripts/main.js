@@ -20,7 +20,7 @@ var locations = [
 		'desc': 'How do magnets work..'
 	}
 ];
-var markerArray = [];
+
 // original code from Google Maps API
 function initMap() {
 	//var bounds = new google.maps.LatLngBounds();
@@ -36,7 +36,6 @@ function initMap() {
 		map: map,
 		animation: google.maps.Animation.DROP
 	});
-		markerArray.push(marker);
 		google.maps.event.addListener(marker, 'click', (function(marker, i){
 			return function(){
 				var contentString = getContentString(locations[i]);
@@ -66,14 +65,14 @@ var getContentString = function(location) {
 
 function viewModel() {
 	var self = this;
-	this.markers = ko.observableArray(markerArray);
+	this.locationsList = ko.observableArray(locations);
 	this.query = ko.observable('');
 
 	this.search = function(value) {
-		self.markers.removeAll();
-		for(var x in self.markers) {
-			if(self.markers[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-				self.markers.push(self.markers[x]);
+		self.locationsList.removeAll();
+		for(var x in self.locationsList) {
+			if(self.locationsList[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+				self.locationsList.push(self.locationsList[x]);
 			}
 		}
 	};
