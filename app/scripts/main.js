@@ -1,58 +1,53 @@
-var map;
+var map, infoWindow, i;
 var myLatlng = {lat: 49.2844, lng: -123.1089};
-var markers = [
+var locations = [
 	{
 		'name': "Steam Clock",
 		'lat': 49.2844,
-		'lng': -123.1089
+		'lng': -123.1089,
+		'desc': "Steam Clock!"
 	},
 	{
 		'name': "Aquarium",
 		'lat': 49.301286,
-		'lng': -123.130843
+		'lng': -123.130843,
+		'desc': 'Fishies!'
 	},
 	{
 		'name': "Science World",
 		'lat': 49.273513,
-		'lng': -123.103834
+		'lng': -123.103834,
+		'desc': 'How do magnets work..'
 	}
 ]
-
+var markerArray = [];
 // original code from Google Maps API
 function initMap() {
-	var vancouver = {lat: 49.2827, lng: -123.1207};
-	var bounds = new google.maps.LatLngBounds();
-	var infoWindow = new google.maps.InfoWindow();
-	//var bounce = toggleBounce();
-	var marker, i;
+	//var bounds = new google.maps.LatLngBounds();
+	infoWindow = new google.maps.InfoWindow();
 	map = new google.maps.Map(document.getElementById('map'), {
-		center: vancouver,
+		center: myLatlng,
 		zoom: 14,
-		disableDefaultUI: true
+		disableDefaultUI: false
 	});
-	// marker.addListener('click', toggleBounce);
-	// marker.addListener('click', function(){
-	// 	toggleBounce;
-	// 	infoWindow.open(map, marker)
-	// });
-	// marker.setMap(map); // To add the marker to the map, call setMap();
-	for (i = 0; i < markers.length; i++){
+
+	for (i = 0; i < locations.length; i++){
 		marker = new google.maps.Marker({
-		position: new google.maps.LatLng(markers[i].lat, markers[i].lng),
-		map: map
+		position: new google.maps.LatLng(locations[i].lat, locations[i].lng),
+		map: map,
+		animation: google.maps.Animation.DROP
 	});
+
 		google.maps.event.addListener(marker, 'click', (function(marker, i){
 			return function(){
 				var contentString =
 					'<div id="content">'+
 					'<div id="siteNotice">'+
 					'</div>'+
-					'<h1 id="firstHeading" class="firstHeading">'+ markers[i].name +'</h1>'+
+					'<h1 id="firstHeading" class="firstHeading">'+ locations[i].name +'</h1>'+
 					'<div id="bodyContent">'+
 					'<p><b>Interesting location description</b></p>'+
-					'<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-					'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-					'(last visited June 22, 2009).</p>'+
+					'<p>'+ locations[i].desc + '<p>' +
 					'</div>'+
 					'</div>';
 				infoWindow.setContent(contentString);
@@ -60,58 +55,23 @@ function initMap() {
 			}
 		})(marker, i));
 	};
-	// function toggleBounce() {
-	// 	if (marker.getAnimation() !== null) {
-	// 		marker.setAnimation(null);
-	// 	} else {
-	// 		marker.setAnimation(google.maps.Animation.BOUNCE);
-	// 	}
-	// };
 }
-// // marker code
-// var marker = new google.maps.Marker({
-//     position: myLatlng,
-//     title:"Hello World!",
-//     draggable: false,
-//     animation: google.maps.Animation.DROP
-// });
 
 
 
+function viewModel() {
+	markers = ko.observableArray[locations],
+	query = ko.observable('')
 
-initMap();
-
-
-
-
-
-// var exampleData = [
-// 	{
-// 		'lat': 49.2844,
-// 		'lng': -123.1089,
-// 		'name': "steam clock"
-// 	}
-// ];
-
-// var viewModel = function() {
-// 	var self = this;
-
-// 	var options, mapContainer, myLocation;
-
-// 	// vancouver = {lat: 49.2827, lng: -123.1207};
-// 	initMap = function(){
-// 		myLocation = new google.maps.LatLng(49.2827, -123.1207);
-// 		mapContainer = document.getElementById('map');
-
-// 		options = {
-// 			center: myLocation,
-// 			zoom: 14,
-// 			disableDefaultUI: true
-// 		};
-
-// 		map = new google.maps.Map(mapContainer, options);
-// 	};
-// 	initMap();
-// };
-
-// ko.applyBindings(new viewModel());
+	search = function(value) {
+		viewModel.markers.removeAll();
+		for(var x in markers) {
+			if(markers[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+				viewModel.markers.push(markers[x]);
+			}
+		}
+	};
+	query.subscribe(viewModel.search);
+};
+console.log(markerArray);
+ko.applyBindings(new viewModel());

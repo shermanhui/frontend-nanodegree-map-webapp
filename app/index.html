@@ -17,7 +17,7 @@
     <!-- build:css styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
-    
+
     <!-- build:js scripts/vendor/modernizr.js -->
     <script src="/bower_components/modernizr/modernizr.js"></script>
     <!-- endbuild -->
@@ -37,7 +37,7 @@
       </div>
       <div class="row" id="search-bar-div">
         <div class='input-group'>
-        <input class='form-control col-md-6' id="search-bar" placeholder="Search Here" type="search" data-bind="value: null, valueUpdate: 'keyup'" autocomplete="off">
+        <input class='form-control col-md-6' id="search-bar" placeholder="Search Here" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
         <span class="input-group-btn">
           <button class="btn btn-default" type="button">Go!</button>
         </span>
@@ -45,7 +45,7 @@
       </div>
     </div>
     <div id="map"></div>
-    
+
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
       (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
@@ -76,8 +76,8 @@
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
     <!-- endbuild -->
-    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBq9yUNpZ3THqGfag7H5m2cADRqMtn8FqM&callback=viewModel"></script> -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBq9yUNpZ3THqGfag7H5m2cADRqMtn8FqM"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBq9yUNpZ3THqGfag7H5m2cADRqMtn8FqM&callback=initMap"></script>
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBq9yUNpZ3THqGfag7H5m2cADRqMtn8FqM"></script> -->
     <!-- build:js scripts/main.js -->
     <script src="scripts/main.js"></script>
     <!-- endbuild -->
