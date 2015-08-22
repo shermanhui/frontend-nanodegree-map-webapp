@@ -61,22 +61,22 @@ var getContentString = function(location) {
 };
 
 
-
-
 function viewModel() {
 	var self = this;
-	this.locationsList = ko.observableArray(locations);
+	this.locationsList = ko.observableArray(locations.slice(0));
 	this.query = ko.observable('');
 
 	this.search = function(value) {
 		self.locationsList.removeAll();
-		for(var x in self.locationsList) {
-			if(self.locationsList[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-				self.locationsList.push(self.locationsList[x]);
+		for(var i in locations) {
+			if (locations[i].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+				self.locationsList.push(locations[i]);
+			} else if (self.locationsList.length == 0) {
+				null; // location for no match case
 			}
 		}
 	};
-	this.query.subscribe(self.search);
+	this.query.subscribe(this.search);
 }
 
 ko.applyBindings(new viewModel());
