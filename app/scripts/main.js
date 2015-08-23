@@ -77,8 +77,8 @@ function viewModel() {
 			if (locations[i].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
 				self.locationsList.push(locations[i]);
 				markers[i].setMap(map);
-			} else if (!locations[i].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-				//self.markers.setMap(null);
+			} else {
+				// space for failed search message
 			}
 		}
 	};
