@@ -2,22 +2,28 @@ var map, infoWindow, i;
 var myLatlng = {lat: 49.2844, lng: -123.1089};
 var locations = [
 	{
-		'name': "Steam Clock",
+		'name': 'Steam Clock',
 		'lat': 49.2844,
 		'lng': -123.1089,
 		'desc': "Steam Clock!"
 	},
 	{
-		'name': "Aquarium",
+		'name': 'Aquarium',
 		'lat': 49.301286,
 		'lng': -123.130843,
 		'desc': 'Fishies!'
 	},
 	{
-		'name': "Science World",
+		'name': 'Science World',
 		'lat': 49.273513,
 		'lng': -123.103834,
 		'desc': 'How do magnets work..'
+	},
+	{
+		'name': 'Gordon MacMillan Space Center',
+		'lat': 49.275435,
+		'lng': -123.143510,
+		'desc': 'Space..The Final Frontier!'
 	}
 ];
 var markers = [];
