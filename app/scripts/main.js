@@ -1,4 +1,8 @@
 var map, infoWindow, i;
+var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
+var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
+var fourSquare_URL = 'https://api.foursquare.com/v2/venues/search?ll=40.7,-74&client_id='+CLIENT_ID+'&client_secret='+CLIENT_SECRET+'&v=20150825';
+
 var myLatlng = {lat: 49.2844, lng: -123.1089};
 var locations = [
 	{
@@ -79,7 +83,7 @@ function viewModel() {
 			markers[i].setMap(null);
 		}
 		self.locationsList.removeAll();
-		for(var i in locations) {
+		for(i in locations) {
 			if (locations[i].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
 				self.locationsList.push(locations[i]);
 				markers[i].setMap(map);
@@ -88,6 +92,16 @@ function viewModel() {
 			}
 		}
 	};
+	this.getData = function() {
+		$.ajax(fourSquare_URL, {
+			dataType: 'json',
+			//type: 'GET',
+			success: function(response){
+				console.log(response);
+			}
+		});
+	};
+	this.getData();
 	this.query.subscribe(this.search);
 }
 
