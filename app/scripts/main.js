@@ -6,8 +6,6 @@ var locName, locAddress, locContact, locLat, locLng;
 
 var myLatlng = {lat: 49.2844, lng: -123.1089};
 var markers = [];
-var locations = [];
-
 // original code from Google Maps API
 function initMap() {
 	bounds = new google.maps.LatLngBounds();
@@ -20,14 +18,15 @@ function initMap() {
 }
 
 function makeLocationData(data){
+	locations = [];
 	var venueData = data.response.venues;
 	var dataLen = venueData.length;
 	for (var i = 0; i < dataLen; i++){
-		locName = data.response.venues[i].name;
-		locAddress = data.response.venues[i].location.address;
-		locContact = data.response.venues[i].contact.formattedPhone;
-		locLat = data.response.venues[i].location.lat;
-		locLng = data.response.venues[i].location.lng;
+		locName = venueData[i].name;
+		locAddress = venueData[i].location.address;
+		locContact = venueData[i].contact.formattedPhone;
+		locLat = venueData[i].location.lat;
+		locLng = venueData[i].location.lng;
 		marker = new google.maps.Marker({
 			position: new google.maps.LatLng(locLat, locLng),
 			map: map,
@@ -45,25 +44,10 @@ function makeLocationData(data){
 		})(marker, i));
 		//console.log(data.response.venues[i]);
 	}
-	console.log(locations);
 	map.fitBounds(bounds);
-}
-//get FourSquare data
-// function getData(){
-// 	$.ajax(fourSquare_URL, {
-// 		dataType: 'json',
-// 		async: true,
-// 		type: 'GET'
-// 		// success: function(data){
-// 		// 	makeMarker(data);
-// 			// console.log(data.response.venues);
-// 			// console.log(data.response.venues[5].name + ', ' + data.response.venues[5].location.address + ', ' + data.response.venues[0].contact.formattedPhone);
-// 			// console.log(data.response.venues[5].location.lat, data.response.venues[5].location.lng);
-// 	}).done(function(data){
-// 		makeMarker(data);
-// 	});
-// }
-console.log(locations);
+	console.log(locations);
+	return locations;
+};
 
 // content string for infoWindow
 var getContentString = function(venueData) {
@@ -82,8 +66,7 @@ var getContentString = function(venueData) {
 
 function viewModel() {
 	var self = this;
-	this.fsLocals = ko.observableArray([]);
-	this.locationsList = ko.observableArray(locations.slice(0));
+	this.locationsList = ko.observableArray();
 	this.query = ko.observable('');
 
 	this.ajaxData = function(){
@@ -92,7 +75,7 @@ function viewModel() {
 			async: true,
 			type: 'GET'
 		}).done(function(data){
-			makeLocationData(data);
+			self.locationsList.push(makeLocationData(data));
 		});
 	};
 
@@ -110,7 +93,7 @@ function viewModel() {
 			}
 		}
 	};
-	// this.filteredLocations = ko.computed(function(){
+		// this.filteredLocations = ko.computed(function(){
 	// 	var search = self.query().toLowerCase();
 	// 	return ko.utils.arrayFilter(self.filteredLocations, function(locations){
 	// 		return locations.name.toLowerCase().indexOf(search) >= 0;
