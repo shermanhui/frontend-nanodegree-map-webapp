@@ -5,7 +5,7 @@ var fourSquare_URL = 'https://api.foursquare.com/v2/venues/search?near=Vancouver
 var locName, locAddress, locContact, locLat, locLng;
 
 var myLatlng = {lat: 49.2844, lng: -123.1089};
-
+var markers = [];
 var locations = [];
 // 	{
 // 		'name': 'Steam Clock',
@@ -32,7 +32,6 @@ var locations = [];
 // 		'desc': 'Space..The Final Frontier!'
 // 	}
 // ];
-var markers = [];
 
 // original code from Google Maps API
 function initMap() {
@@ -60,7 +59,7 @@ function initMap() {
 	// }
 }
 
-function makeMarker(data){
+function makeLocationData(data){
 	var venueData = data.response.venues;
 	var dataLen = venueData.length;
 	for (var i = 0; i < dataLen; i++){
@@ -90,21 +89,22 @@ function makeMarker(data){
 	map.fitBounds(bounds);
 }
 //get FourSquare data
-function getData(){
-	$.ajax(fourSquare_URL, {
-		dataType: 'json',
-		async: true,
-		type: 'GET'
-		// success: function(data){
-		// 	makeMarker(data);
-			// console.log(data.response.venues);
-			// console.log(data.response.venues[5].name + ', ' + data.response.venues[5].location.address + ', ' + data.response.venues[0].contact.formattedPhone);
-			// console.log(data.response.venues[5].location.lat, data.response.venues[5].location.lng);
-	}).done(function(data){
-		makeMarker(data);
-	});
-}
+// function getData(){
+// 	$.ajax(fourSquare_URL, {
+// 		dataType: 'json',
+// 		async: true,
+// 		type: 'GET'
+// 		// success: function(data){
+// 		// 	makeMarker(data);
+// 			// console.log(data.response.venues);
+// 			// console.log(data.response.venues[5].name + ', ' + data.response.venues[5].location.address + ', ' + data.response.venues[0].contact.formattedPhone);
+// 			// console.log(data.response.venues[5].location.lat, data.response.venues[5].location.lng);
+// 	}).done(function(data){
+// 		makeMarker(data);
+// 	});
+// }
 console.log(locations);
+
 // content string for infoWindow
 var getContentString = function(venueData) {
     var contentString =
@@ -122,6 +122,7 @@ var getContentString = function(venueData) {
 
 function viewModel() {
 	var self = this;
+	this.fsLocals = ko.observableArray([]);
 	this.locationsList = ko.observableArray(locations.slice(0));
 	this.query = ko.observable('');
 
@@ -139,6 +140,17 @@ function viewModel() {
 			}
 		}
 	};
+
+	this.ajaxData = function(){
+		$.ajax(fourSquare_URL, {
+			dataType: 'json',
+			async: true,
+			type: 'GET'
+		}).done(function(data){
+			makeLocationData(data);
+		});
+	};
+	this.ajaxData();
 	// this.filteredLocations = ko.computed(function(){
 	// 	var search = self.query().toLowerCase();
 	// 	return ko.utils.arrayFilter(self.filteredLocations, function(locations){
@@ -147,5 +159,4 @@ function viewModel() {
 	// }, viewModel);
 	this.query.subscribe(this.search);
 }
-getData();
 ko.applyBindings(new viewModel());
