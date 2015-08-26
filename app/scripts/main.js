@@ -2,7 +2,6 @@ var map, infoWindow, i, bounds;
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
 var fourSquare_URL = 'https://api.foursquare.com/v2/venues/search?near=Vancouver,BC&categoryId=4bf58dd8d48988d116941735&client_id='+CLIENT_ID+'&client_secret='+CLIENT_SECRET+'&v=20150825';
-var locName, locAddress, locContact, locLat, locLng;
 
 var myLatlng = {lat: 49.2844, lng: -123.1089};
 var markers = [];
@@ -18,15 +17,15 @@ function initMap() {
 }
 
 function makeLocationData(data){
-	locations = [];
+	var locations = [];
 	var venueData = data.response.venues;
 	var dataLen = venueData.length;
 	for (var i = 0; i < dataLen; i++){
-		locName = venueData[i].name;
-		locAddress = venueData[i].location.address;
-		locContact = venueData[i].contact.formattedPhone;
-		locLat = venueData[i].location.lat;
-		locLng = venueData[i].location.lng;
+		var locName = venueData[i].name;
+		var locAddress = venueData[i].location.address;
+		var locContact = venueData[i].contact.formattedPhone;
+		var locLat = venueData[i].location.lat;
+		var locLng = venueData[i].location.lng;
 		marker = new google.maps.Marker({
 			position: new google.maps.LatLng(locLat, locLng),
 			map: map,
@@ -66,10 +65,10 @@ var getContentString = function(venueData) {
 
 function viewModel() {
 	var self = this;
-	this.locationsList = ko.observableArray();
+	this.locationsList = ko.observableArray([]);
 	this.query = ko.observable('');
 
-	this.ajaxData = function(){
+	this.ajaxData = ko.computed(function(){
 		$.ajax(fourSquare_URL, {
 			dataType: 'json',
 			async: true,
@@ -77,7 +76,7 @@ function viewModel() {
 		}).done(function(data){
 			self.locationsList.push(makeLocationData(data));
 		});
-	};
+	});
 
 	this.search = function(value) {
 		for (var i in markers){
