@@ -7,31 +7,6 @@ var locName, locAddress, locContact, locLat, locLng;
 var myLatlng = {lat: 49.2844, lng: -123.1089};
 var markers = [];
 var locations = [];
-// 	{
-// 		'name': 'Steam Clock',
-// 		'lat': 49.2844,
-// 		'lng': -123.1089,
-// 		'desc': "Steam Clock!"
-// 	},
-// 	{
-// 		'name': 'Aquarium',
-// 		'lat': 49.301286,
-// 		'lng': -123.130843,
-// 		'desc': 'Fishies!'
-// 	},
-// 	{
-// 		'name': 'Science World',
-// 		'lat': 49.273513,
-// 		'lng': -123.103834,
-// 		'desc': 'How do magnets work..'
-// 	},
-// 	{
-// 		'name': 'Gordon MacMillan Space Center',
-// 		'lat': 49.275435,
-// 		'lng': -123.143510,
-// 		'desc': 'Space..The Final Frontier!'
-// 	}
-// ];
 
 // original code from Google Maps API
 function initMap() {
@@ -42,21 +17,6 @@ function initMap() {
 		zoom: 12,
 		disableDefaultUI: false
 	});
-	// for (i = 0; i < locations.length; i++){
-	// 	marker = new google.maps.Marker({
-	// 	position: new google.maps.LatLng(locations[i].lat, locations[i].lng),
-	// 	map: map,
-	// 	animation: google.maps.Animation.DROP
-	// });
-	// 	markers.push(marker);
-	// 	google.maps.event.addListener(marker, 'click', (function(marker, i){
-	// 		return function(){
-	// 			var contentString = getContentString(locations[i]);
-	// 			infoWindow.setContent(contentString);
-	// 			infoWindow.open(map, marker);
-	// 		};
-	// 	})(marker, i));
-	// }
 }
 
 function makeLocationData(data){
@@ -126,6 +86,16 @@ function viewModel() {
 	this.locationsList = ko.observableArray(locations.slice(0));
 	this.query = ko.observable('');
 
+	this.ajaxData = function(){
+		$.ajax(fourSquare_URL, {
+			dataType: 'json',
+			async: true,
+			type: 'GET'
+		}).done(function(data){
+			makeLocationData(data);
+		});
+	};
+
 	this.search = function(value) {
 		for (var i in markers){
 			markers[i].setMap(null);
@@ -140,23 +110,14 @@ function viewModel() {
 			}
 		}
 	};
-
-	this.ajaxData = function(){
-		$.ajax(fourSquare_URL, {
-			dataType: 'json',
-			async: true,
-			type: 'GET'
-		}).done(function(data){
-			makeLocationData(data);
-		});
-	};
-	this.ajaxData();
 	// this.filteredLocations = ko.computed(function(){
 	// 	var search = self.query().toLowerCase();
 	// 	return ko.utils.arrayFilter(self.filteredLocations, function(locations){
 	// 		return locations.name.toLowerCase().indexOf(search) >= 0;
 	// 	});
 	// }, viewModel);
+
+	this.ajaxData();
 	this.query.subscribe(this.search);
 }
 ko.applyBindings(new viewModel());
