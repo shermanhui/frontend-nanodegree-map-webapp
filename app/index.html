@@ -37,7 +37,7 @@
       </div>
       <div class="row" id="search-bar-div">
         <div class='input-group'>
-        <input class='form-control col-md-6' id="search-bar" placeholder="Search Here" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
+        <input class='form-control col-md-6' id="search-bar" placeholder="Search Here" type="search" data-bind="value: filter(), valueUpdate: 'keyup'" autocomplete="off">
         <span class="input-group-btn">
           <button class="btn btn-default" type="button">Go!</button>
         </span>
@@ -53,7 +53,7 @@
       <div class="col-md-12 center-block" id='map'></div>
       <div class="col-md-3 pull-right" id='list'>
         <ul class='list-group' data-bind="foreach: locationsList">
-          <li class='list-group-item'><span data-bind="text: name"></span></li>
+          <li class='list-group-item'><span data-bind="text: locationName"></span></li>
         </ul>
       </div>
     </div>

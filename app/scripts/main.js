@@ -17,35 +17,32 @@ function initMap() {
 }
 
 function makeLocationData(data){
-	var locations = [];
-	var venueData = data.response.venues;
-	var dataLen = venueData.length;
-	for (var i = 0; i < dataLen; i++){
-		var locName = venueData[i].name;
-		var locAddress = venueData[i].location.address;
-		var locContact = venueData[i].contact.formattedPhone;
-		var locLat = venueData[i].location.lat;
-		var locLng = venueData[i].location.lng;
-		marker = new google.maps.Marker({
-			position: new google.maps.LatLng(locLat, locLng),
-			map: map,
-			animation: google.maps.Animation.DROP
-		});
-		locations.push(locName);
-		bounds.extend(marker.position);
+	this.locationName = data.name;
+	this.locAddress = data.location.address;
+	this.locContact = data.contact.formattedPhone;
+	this.locLat = data.location.lat;
+	this.locLng = data.location.lng;
 
-		google.maps.event.addListener(marker, 'click', (function(marker, i){
-			return function(){
-				var contentString = getContentString(venueData[i]);
-				infoWindow.setContent(contentString);
-				infoWindow.open(map, marker);
-			};
-		})(marker, i));
-		//console.log(data.response.venues[i]);
-	}
+	return this.locationName;
+};
+
+var makeMarker = function(data){
+	marker = new google.maps.Marker({
+		position: new google.maps.LatLng(locLat, locLng),
+		map: map,
+		animation: google.maps.Animation.DROP
+	});
+	bounds.extend(marker.position);
+
+	google.maps.event.addListener(marker, 'click', (function(marker, i){
+		return function(){
+			var contentString = getContentString(data);
+			infoWindow.setContent(contentString);
+			infoWindow.open(map, marker);
+		};
+	})(marker, i));
+
 	map.fitBounds(bounds);
-	console.log(locations);
-	return locations;
 };
 
 // content string for infoWindow
@@ -65,41 +62,54 @@ var getContentString = function(venueData) {
 
 function viewModel() {
 	var self = this;
-	this.locationsList = ko.observableArray([]);
-	this.query = ko.observable('');
+	this.locationsList = ko.observableArray();
+	this.searchList = ko.observableArray(self.locationsList.splice(0));
+	this.markers = ko.observableArray();
+	this.filter = ko.observable('');
 
-	this.ajaxData = ko.computed(function(){
+	this.ajaxData = function(){
 		$.ajax(fourSquare_URL, {
 			dataType: 'json',
 			async: true,
 			type: 'GET'
 		}).done(function(data){
-			self.locationsList.push(makeLocationData(data));
-		});
-	});
-
-	this.search = function(value) {
-		for (var i in markers){
-			markers[i].setMap(null);
-		}
-		self.locationsList.removeAll();
-		for(i in locations) {
-			if (locations[i].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-				self.locationsList.push(locations[i]);
-				markers[i].setMap(map);
-			} else {
-				// space for failed search message
+			for (var i = 0; i < 5; i++){
+				var info = data.response.venues[i];
+				self.locationsList.push(makeLocationData(info));
+				makeMarker(info);
 			}
-		}
+			//self.locationsList.push(makeLocationData());
+			// console.log(self.locationsList());
+		});
 	};
-		// this.filteredLocations = ko.computed(function(){
-	// 	var search = self.query().toLowerCase();
-	// 	return ko.utils.arrayFilter(self.filteredLocations, function(locations){
-	// 		return locations.name.toLowerCase().indexOf(search) >= 0;
-	// 	});
-	// }, viewModel);
+
+	// this.search = function(value) {
+	// 	for (var i in markers){
+	// 		markers[i].setMap(null);
+	// 	}
+	// 	self.locationsList.removeAll();
+	// 	for(i in locations) {
+	// 		if (locations[i].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+	// 			self.locationsList.push(locations[i]);
+	// 			markers[i].setMap(map);
+	// 		} else {
+	// 			// space for failed search message
+	// 		}
+	// 	}
+	// };
+	this.filteredLocations = ko.computed(function(){
+		var search = self.filter().toLowerCase();
+		if (!search){
+			return self.searchList();
+		} else{
+			return ko.utils.arrayFilter(self.searchList(), function(search){
+				return ko.utils.stringStartsWith();
+			});
+		}
+	}, viewModel);
 
 	this.ajaxData();
-	this.query.subscribe(this.search);
+	// this.query.subscribe(this.search);
 }
-ko.applyBindings(new viewModel());
+var viewModel = new viewModel();
+ko.applyBindings(viewModel);
