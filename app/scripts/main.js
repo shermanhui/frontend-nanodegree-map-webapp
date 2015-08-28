@@ -97,16 +97,40 @@ function viewModel() {
 	// 		}
 	// 	}
 	// };
-	this.filteredLocations = ko.computed(function(){
-		var search = self.filter().toLowerCase();
-		if (!search){
-			return self.searchList();
-		} else{
-			return ko.utils.arrayFilter(self.searchList(), function(search){
-				return ko.utils.stringStartsWith();
+	// this.filteredLocations = ko.computed(function(){
+	// 	var search = self.filter().toLowerCase();
+	// 	if (!search){
+	// 		return self.searchList();
+	// 	} else{
+	// 		return ko.utils.arrayFilter(self.searchList(), function(search){
+	// 			return ko.utils.stringStartsWith();
+	// 		});
+	// 	}
+	// }, viewModel);
+	this.setMarker = function(){
+		for (var i = 0; i < self.markers().length; i++){
+			self.markers()[i].setVisible(true);
+		};
+	}
+	this.searchFilter = ko.computed(function(){
+		var filter = self.filter().toLowerCase();
+		if (!filter){ // if false return the list as normal
+			self.setMarker();
+			return self.locationsList();
+		} else {
+			return ko.utils.arrayFilter(self.locationsList(), function(location){
+				for (var i = 0; i < self.markers().length; i++){ // for every marker if the title of the marker matches the filter set marker to visible
+					if (self.markers()[i].title.toLowerCase().indexOf(filter) !== -1){
+						self.markers()[i].setVisible(true);
+					} else { // everything else, set it to false
+						self.markers()[i].setVisible(false);
+					}
+				}
+				return location.toLowerCase().indexOf(filter) !== -1; // returns matched list names
 			});
 		}
-	}, viewModel);
+	});
+
 
 	this.ajaxData();
 	// this.query.subscribe(this.search);
