@@ -107,18 +107,14 @@ function viewModel() {
 	// 		});
 	// 	}
 	// }, viewModel);
-	this.setMarker = function(){
-		for (var i = 0; i < self.markers().length; i++){
-			self.markers()[i].setVisible(true);
-		};
-	}
 	this.searchFilter = ko.computed(function(){
 		var filter = self.filter().toLowerCase();
 		if (!filter){ // if false return the list as normal
-			self.setMarker();
+			// self.setMarker();
+			console.log(self.locationsList())
 			return self.locationsList();
 		} else {
-			return ko.utils.arrayFilter(self.locationsList(), function(location){
+			return ko.utils.arrayFilter(self.locationsList(), function(makeLocationData){
 				for (var i = 0; i < self.markers().length; i++){ // for every marker if the title of the marker matches the filter set marker to visible
 					if (self.markers()[i].title.toLowerCase().indexOf(filter) !== -1){
 						self.markers()[i].setVisible(true);
@@ -126,7 +122,7 @@ function viewModel() {
 						self.markers()[i].setVisible(false);
 					}
 				}
-				return location.toLowerCase().indexOf(filter) !== -1; // returns matched list names
+				return makeLocationData.toLowerCase().indexOf(filter) !== -1; // returns matched list names
 			});
 		}
 	});
