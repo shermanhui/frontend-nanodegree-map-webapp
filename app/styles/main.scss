@@ -230,7 +230,6 @@ html, body {
 
 /* For Smaller Devices */
 @media screen and (min-width: 340px) and (max-width: 750px) {
-
   #directions-container{
     visibility: hidden;
     width: 50%;
@@ -244,5 +243,4 @@ html, body {
     font-size: 1.5em;
     padding: 0;
   }
-
 }
