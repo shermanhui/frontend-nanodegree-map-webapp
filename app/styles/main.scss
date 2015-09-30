@@ -79,7 +79,7 @@ html, body {
     border-color: white;
 }
 
-.btn-primary:hover {
+.btn:hover, .btn-primary:hover {
     font-weight: bolder !important;
     background: transparent !important;
     border-color: white !important;
@@ -228,6 +228,7 @@ html, body {
 }
 
 
+/* For Smaller Devices */
 @media screen and (min-width: 340px) and (max-width: 750px) {
 
   #directions-container{
@@ -245,4 +246,3 @@ html, body {
   }
 
 }
-
