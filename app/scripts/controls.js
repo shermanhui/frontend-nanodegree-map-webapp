@@ -1,12 +1,20 @@
 // Toggles Crawl List
 $("#menu-toggle").click(function(e) {
     e.preventDefault();
-	$("#directions-container").toggle();
+	if ( $('#directions-container').css('visibility') == 'hidden' ){
+		$('#directions-container').css('visibility','visible');
+	} else {
+		$('#directions-container').css('visibility','hidden');
+	}
 });
 
 $("#locations-toggle").click(function(e){
 	e.preventDefault();
-	$("#list").toggle();
+	if ( $('#list').css('visibility') == 'hidden' ){
+		$('#list').css('visibility','visible');
+	} else {
+		$('#list').css('visibility','hidden');
+	}
 });
 
 // calls panelSnap.js and sets up snap functions

@@ -175,8 +175,6 @@ function initMap() {
 	});
 
 	// adds search bars and list view onto map, sets styled map
-	map.controls[google.maps.ControlPosition.LEFT_TOP].push(document.getElementById('map-buttons'));
-	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('map-inputs'));
 	map.controls[google.maps.ControlPosition.LEFT_CENTER].push(document.getElementById('directions-container'));
 	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'));
 	map.mapTypes.set('map_style', styledMap);

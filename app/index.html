@@ -22,7 +22,7 @@
     <script src="/bower_components/modernizr/modernizr.js"></script>
     <!-- endbuild -->
   </head>
-  <body id='panels'>
+  <body>
     <!--[if lt IE 10]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -63,10 +63,46 @@
     <section id='map-app'>
         <div class='container-fluid' id='map-padding'>
             <div id='map'></div>
-            <div class='input-group input-group-sm pull-right' id='map-inputs'>
-                <input class='form-control' id="global-search" placeholder="City, State" type="search" data-bind="value: locInput" autocomplete="off">
-                <input class='form-control' id="search-bar" placeholder="Filter Locations" type="search" data-bind="textInput: filter" autocomplete="off">
-            </div>
+
+            <!-- NAVBAR Only Shows Up On Mobile -->
+            <nav class="navbar navbar-default" id='mobile-only'>
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">CONTROLS</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <form class="navbar-form navbar-right" role="search">
+                        <div class="form-group">
+                            <input class='form-control' id="global-search" placeholder="City, State" type="search" data-bind="value: locInput" autocomplete="off">
+                            <input class='form-control' id="search-bar" placeholder="Filter Locations" type="search" data-bind="textInput: filter" autocomplete="off">
+                        </div>
+                    </form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">TOGGLE VISIBILITY<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><button class="btn outline" id="menu-toggle">Toggle Crawl List</button></li>
+                                <li><button class="btn outline" id="locations-toggle">Toggle Locations List</li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">CREATE YOUR CRAWL<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><button class='btn outline' data-bind='click: makeRoute, disable: isLocked'>Create Route</button></li>
+                                <li><button class='btn outline' data-bind='click: emptyCrawlList, enable: viewModel.crawlList().length > 0'>Clear List</button></li>
+                                <li><button class='btn outline' data-bind='click: clearRoute, enable: isLocked'>Reset Data</button></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- List View -->
             <div class='col-md-4 poiret-font gray' id='list'>
                 <ul data-bind='foreach: searchFilter'>
                     <li>
@@ -78,14 +114,8 @@
                     </li>
                 </ul>
             </div>
-            <div class='btn-group-vertical' id='map-buttons'>
-                <button type='button' class="center-block btn btn-primary outline collapsed gray" id="menu-toggle">
-                    <span>Toggle Crawl List</span>
-                </button>
-                <button type='button' class="center-block btn btn-primary outline collapsed gray" id="locations-toggle">
-                    <span>Toggle Locations List</span>
-                </button>
-            </div>
+
+            <!-- CrawlList Directions -->
             <div class='poiret-font gray' id='directions-container'>
                 <h2>Your Crawl Route</h2>
                 <div data-bind="if: crawlList().length == 0">There aren't any locations added yet. Add some to begin!</div>

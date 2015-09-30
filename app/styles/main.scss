@@ -134,7 +134,6 @@ html, body {
 #list {
   position: absolute;
   top: 25%;
-  left: 75%;
   height: 50%;
   width: 25%;
   overflow-y: auto;
@@ -157,16 +156,6 @@ html, body {
   font-weight: bold;
 }
 /* ListView CSS END */
-
-/* Toggle Buttons CSS */
-#menu-toggle, #locations-toggle {
-    background: rgba(255,255,255,0.8) !important;
-    border-width: 0.2em;
-    border-style: solid !important;
-    border-color: black !important;
-    margin: 10px 10px auto;
-}
-/* Toggle Button CSS END */
 
 /* Directions Container CSS */
 #directions-container {
@@ -238,9 +227,21 @@ html, body {
   padding-right: 0px !important;
 }
 
+
 @media screen and (min-width: 340px) and (max-width: 750px) {
-  #directions-panel, #directions-container, #list, #locations-toggle, #menu-toggle, #map-inputs{
-    display:none;
+
+  #directions-container{
+    visibility: hidden;
+    width: 50%;
+  }
+
+  #list {
+    visibility: hidden;
+    height: 50%;
+    width: 50%;
+    overflow-y: auto;
+    font-size: 1.5em;
+    padding: 0;
   }
 
 }
