@@ -166,7 +166,7 @@ function initMap() {
 	];
 
 	var styledMap = new google.maps.StyledMapType(styles,
-    	{name: "Styled Map"});
+		{name: "Styled Map"});
 
 	google.maps.event.addDomListener(window, "resize", function() {	// browser resize triggers map resize for responsiveness
 		var center = map.getCenter();
