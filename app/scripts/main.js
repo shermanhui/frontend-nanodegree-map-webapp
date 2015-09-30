@@ -202,7 +202,7 @@ function viewModel(){
 	* @param {KO Observable} location a user defined KO Observable
 	*/
 	this.loadLocations = function(location){ // takes a user defined location; Vancouver, BC to start with
-		$.ajax({
+		var settings = {
 			url: 'https://api.foursquare.com/v2/venues/explore?',
 			dataType: 'json',
 			data: 'limit=30&near=' + location +
@@ -210,19 +210,20 @@ function viewModel(){
 				',' + BREWERY_ID +
 				'&client_id=' + CLIENT_ID +
 				'&client_secret=' + CLIENT_SECRET +
-				'&v=20150806&m=foursquare',
-			success: function(fsData){
+				'&v=20150806&m=foursquare'
+			};
+		$.ajax(settings)
+			.done(function(fsData){
 				var response = fsData.response.groups[0].items;
 				self.clearData(); // makes sure crawl List and directions display is emptied out on new location search
 				self.clearRoute(directionsDisplay); // empties out any previously created route in crawl List
 				self.createLocations(response); // creates new list of locations to populate map
 				map.setCenter({lat: self.locationsList()[5].lat(), lng: self.locationsList()[15].lng()}); // hacky way of getting map to re-center on new search
 				map.setZoom(13);
-			},
-			error: function(error){
+			})
+			.fail(function(error){
 				alert('There was a problem retrieving the requested data, please double check your location');
-			}
-		});
+			});
 	};
 
 	/*
