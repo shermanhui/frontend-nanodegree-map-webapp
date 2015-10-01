@@ -1,3 +1,4 @@
+'use strict';
 var map, marker, bounds, directionsService, directionsDisplay;
 var infoWindow = new google.maps.InfoWindow();
 
@@ -24,16 +25,16 @@ var Location = function(data){
 	this.icon = ko.observable(data.icon);
 
 	this.contentString = // create content string for infoWindow
-		'<div class="text-center" id="content">'+
-		'<div id="siteNotice">'+
-		'</div>'+
-		'<h1 id="firstHeading" class="firstHeading">'+ self.name() +'</h1>'+
-		'<div id="bodyContent">'+
-		'<p><b>Address and Rating</b></p>'+
-		'<p>'+ self.address() + ', FourSquare Rating: '+ self.rating() + '</p>' +
+		'<div class="text-center" id="content">' +
+		'<div id="siteNotice">' +
+		'</div>' +
+		'<h1 id="firstHeading" class="firstHeading">' + self.name() + '</h1>' +
+		'<div id="bodyContent">' +
+		'<p><b>Address and Rating</b></p>' +
+		'<p>' + self.address() + ', FourSquare Rating: ' + self.rating() + '</p>' +
 		'<button class="add btn btn-primary outline gray" data-bind="click: $parent.addToRoute">Add</button>' +
 		'<button class="remove btn btn-primary outline gray" data-bind="click: $parent.removeFromRoute">Remove</button>' +
-		'</div>'+
+		'</div>' +
 		'</div>';
 };
 
@@ -48,7 +49,7 @@ function initMap() {
 	});
 
 	// styles google maps api
-	var styles =[
+	var styles = [
 		{
 			"elementType": "labels",
 			"stylers": [
@@ -192,7 +193,7 @@ function viewModel(){
 	this.markers = ko.observableArray(); // list of markers
 	this.crawlList = ko.observableArray(); // list of user selected venues
 	this.filter = ko.observable(''); 	// the filter for search bar
-	this.isLocked= ko.observable(false); // toggles clear list & reset list button accessibility
+	this.isLocked = ko.observable(false); // toggles clear list & reset list button accessibility
 	this.locInput = ko.observable('Vancouver, BC');  // user defined location input
 
 	/*
@@ -220,7 +221,7 @@ function viewModel(){
 				map.setZoom(13);
 			})
 			.fail(function(error){
-				alert('There was a problem retrieving the requested data, please double check your location');
+				alert('There was a problem retrieving the requested data, please double check your location. Error Code ' + error);
 			});
 	};
 
@@ -294,7 +295,9 @@ function viewModel(){
 					infoWindow.setContent(place.contentString);
 					infoWindow.open(map, marker);
 					self.setAnimation(google.maps.Animation.BOUNCE);
-					setTimeout(function(){self.setAnimation(null);}, 750);
+					setTimeout(function(){
+						self.setAnimation(null);
+					}, 750);
 				};
 			})(marker, place));
 			map.fitBounds(bounds);
@@ -317,7 +320,9 @@ function viewModel(){
 				infoWindow.setContent(place.contentString);
 				infoWindow.open(map, currentMarker);
 				currentMarker.setAnimation(google.maps.Animation.BOUNCE);
-				setTimeout(function(){currentMarker.setAnimation(null);}, 750);
+				setTimeout(function(){
+					currentMarker.setAnimation(null);
+				}, 750);
 			}
 		}
 	};
@@ -371,7 +376,7 @@ function viewModel(){
 		window.directionsService.route({
 			origin: waypoints[0].location,// sets origin as first way point, this is causing the directions panel bug
 			destination: waypoints[waypoints.length - 1].location, // set last waypoint as destination, causing duplicate location on directions panel
-			waypoints: waypoints.slice(1, waypoints.length -1),
+			waypoints: waypoints.slice(1, waypoints.length - 1),
 			optimizeWaypoints: false,
 			travelMode: google.maps.TravelMode.WALKING
 		}, function(response, status){
@@ -464,5 +469,5 @@ function viewModel(){
 // initialize the map
 initMap();
 // bind KO
-var viewModel = new viewModel();
-ko.applyBindings(viewModel);
+var ViewModel = new viewModel();
+ko.applyBindings(ViewModel);
