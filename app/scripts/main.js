@@ -1,7 +1,7 @@
 'use strict';
 /* eslint-env node, jquery */
-/* global google, ko, marker */
-/* eslint eqeqeq: 0, quotes: 0, no-alert: 0, no-shadow: 0, no-unused-vars: 0 */
+/* global google, ko */
+/* eslint eqeqeq: 0, quotes: 0, no-alert: 0, no-unused-vars: 0, no-shadow: 0 */
 
 var map, bounds, directionsService, directionsDisplay;
 var infoWindow = new google.maps.InfoWindow();
