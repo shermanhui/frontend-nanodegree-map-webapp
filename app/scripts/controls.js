@@ -1,19 +1,22 @@
+'use strict';
+/* eslint-env node, jquery */
+/* eslint eqeqeq: 0 */
 // Toggles Crawl List
-$("#menu-toggle").click(function(e) {
+$('#menu-toggle').click(function(e) {
     e.preventDefault();
 	if ( $('#directions-container').css('visibility') == 'hidden' ){
-		$('#directions-container').css('visibility','visible');
+		$('#directions-container').css('visibility', 'visible');
 	} else {
-		$('#directions-container').css('visibility','hidden');
+		$('#directions-container').css('visibility', 'hidden');
 	}
 });
 
-$("#locations-toggle").click(function(e){
+$('#locations-toggle').click(function(e){
 	e.preventDefault();
 	if ( $('#list').css('visibility') == 'hidden' ){
-		$('#list').css('visibility','visible');
+		$('#list').css('visibility', 'visible');
 	} else {
-		$('#list').css('visibility','hidden');
+		$('#list').css('visibility', 'hidden');
 	}
 });
 
@@ -35,11 +38,11 @@ var options = {
 	navigation: {
 		keys: {
 			nextKey: 40,
-			prevKey: 38,
+			prevKey: 38
 		},
 		buttons: {
 			$nextButton: false,
-			$prevButton: false,
+			$prevButton: false
 		},
 		wrapAround: false
 	}

@@ -1,5 +1,9 @@
 'use strict';
-var map, marker, bounds, directionsService, directionsDisplay;
+/* eslint-env node, jquery */
+/* global google, ko, marker */
+/* eslint eqeqeq: 0, quotes: 0, no-alert: 0, no-shadow: 0, no-unused-vars: 0 */
+
+var map, bounds, directionsService, directionsDisplay;
 var infoWindow = new google.maps.InfoWindow();
 
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
@@ -183,11 +187,11 @@ function initMap() {
 }
 
 /*
-* viewModel for FourSquare API, and Maps data
-* @class viewModel
+* ViewModel for FourSquare API, and Maps data
+* @class ViewModel
 *
 */
-function viewModel(){
+function ViewModel(){
 	var self = this;
 	this.locationsList = ko.observableArray(); // list to keep track of Locations
 	this.markers = ko.observableArray(); // list of markers
@@ -279,7 +283,7 @@ function viewModel(){
 		// for each Location plant a marker at the given lat,lng and on click show the info window
 		self.locationsList().forEach(function(place){
 			var myLatLng = new google.maps.LatLng(place.lat(), place.lng());
-			marker = new google.maps.Marker({
+			var marker = new google.maps.Marker({
 				position: myLatLng,
 				map: map,
 				title: place.name(),
@@ -291,12 +295,12 @@ function viewModel(){
 
 			google.maps.event.addListener(marker, 'click', (function(marker, place) {
 				return function() {
-					var self = this;
+					var thisMarker = this;
 					infoWindow.setContent(place.contentString);
 					infoWindow.open(map, marker);
-					self.setAnimation(google.maps.Animation.BOUNCE);
+					thisMarker.setAnimation(google.maps.Animation.BOUNCE);
 					setTimeout(function(){
-						self.setAnimation(null);
+						thisMarker.setAnimation(null);
 					}, 750);
 				};
 			})(marker, place));
@@ -320,11 +324,15 @@ function viewModel(){
 				infoWindow.setContent(place.contentString);
 				infoWindow.open(map, currentMarker);
 				currentMarker.setAnimation(google.maps.Animation.BOUNCE);
-				setTimeout(function(){
-					currentMarker.setAnimation(null);
-				}, 750);
+				self.stopMarker(currentMarker);
 			}
 		}
+	};
+
+	this.stopMarker = function(currentMarker){
+		setTimeout(function(){
+			currentMarker.setAnimation(null);
+		}, 750);
 	};
 
 	/*
@@ -382,7 +390,6 @@ function viewModel(){
 		}, function(response, status){
 			if (status === google.maps.DirectionsStatus.OK){
 				window.directionsDisplay.setDirections(response);
-				var route = response.routes[0];
 			} else {
 				alert('Directions request failed due to ' + status + ', please try again!');
 			}
@@ -469,5 +476,5 @@ function viewModel(){
 // initialize the map
 initMap();
 // bind KO
-var ViewModel = new viewModel();
-ko.applyBindings(ViewModel);
+var viewModel = new ViewModel();
+ko.applyBindings(viewModel);
