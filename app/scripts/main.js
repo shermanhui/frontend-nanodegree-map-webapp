@@ -1,13 +1,13 @@
 /**
  * Creates interactive Map using data from FourSquare to plot a Pub Crawl
  * @author Sherman Hui
- * @required knockout.js
+ * @required knockout.js, panelsnap.js, sweetalert.min.js
  */
 
 'use strict';
 /* eslint-env node, jquery */
-/* global google, ko */
-/* eslint eqeqeq: 0, quotes: 0, no-alert: 0, no-unused-vars: 0, no-shadow: 0 */
+/* global google, ko, swal*/
+/* eslint eqeqeq: 0, quotes: 0, no-unused-vars: 0, no-shadow: 0 */
 
 var map, bounds, directionsService, directionsDisplay, infoWindow = new google.maps.InfoWindow();
 
@@ -19,7 +19,7 @@ var BREWERY_ID = '50327c8591d4c4b30a586d5d';
 /*
 * Represents a Location
 * @constructor
-* @param {Object} data
+* @param {Object} data - FourSquare data includes name, lat/lng, address, rating, marker, icon and category
 */
 
 var Location = function(data){
@@ -57,8 +57,7 @@ function initMap() {
 		disableDefaultUI: true
 	});
 
-	// styles google maps api
-	var styles = [
+	var styles = [ // styles google maps api
 		{
 			"elementType": "labels",
 			"stylers": [
@@ -175,7 +174,7 @@ function initMap() {
 		}
 	];
 
-	var styledMap = new google.maps.StyledMapType(styles,
+	var styledMap = new google.maps.StyledMapType(styles, // creates new map styles
 		{name: "Styled Map"});
 
 	google.maps.event.addDomListener(window, "resize", function() {	// browser resize triggers map resize for responsiveness
@@ -187,8 +186,8 @@ function initMap() {
 	// adds search bars and list view onto map, sets styled map
 	map.controls[google.maps.ControlPosition.LEFT_CENTER].push(document.getElementById('directions-container'));
 	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'));
-	map.mapTypes.set('map_style', styledMap);
-	map.setMapTypeId('map_style');
+	map.mapTypes.set('map_style', styledMap); // sets styles to new styled map
+	map.setMapTypeId('map_style'); // gives map a new id
 }
 
 /*
@@ -207,7 +206,7 @@ function ViewModel(){
 
 	/*
 	* @description retrieves relevant Locations from FourSquare API according to user defined location
-	* @param {KO Observable} location a user defined KO Observable
+	* @param {KO Observable} location - technically it's just a string
 	*/
 	this.loadLocations = function(location){ // takes a user defined location; Vancouver, BC to start with
 		var settings = {
@@ -230,7 +229,7 @@ function ViewModel(){
 				map.setZoom(13);
 			})
 			.fail(function(error){
-				alert('There was a problem retrieving the requested data, please double check your location. Error Code ' + error);
+				swal('Uh Oh!', 'There was a problem retrieving the location, please double check your search query!', 'error');
 			});
 	};
 
@@ -329,11 +328,15 @@ function ViewModel(){
 				infoWindow.setContent(place.contentString);
 				infoWindow.open(map, currentMarker);
 				currentMarker.setAnimation(google.maps.Animation.BOUNCE);
-				self.stopMarker(currentMarker);
+				self.stopMarker(currentMarker); // calls this.stopMarker to halt bouncing marker
 			}
 		}
 	};
 
+	/*
+	* @description set timeout function for marker to stop bouncing
+	* @param {google.maps.Marker} marker - takes a google maps marker
+	*/
 	this.stopMarker = function(currentMarker){
 		setTimeout(function(){
 			currentMarker.setAnimation(null);
@@ -341,35 +344,35 @@ function ViewModel(){
 	};
 
 	/*
-	* @description adds user selected location to crawl list to make and draw directions on map, prevents adding the same location twice
-	* @param {object} place - Location Object Name is used as id, and then if it matches the Location on file, it is added to self.crawlList
+	* @description adds user selected location to crawl list, prevents adding the same location twice
+	* @param {object} place - Location Object Name is used as id
 	*/
 
 	this.addToRoute = function(place){ // takes in a location object and adds it to crawlList so user can create a route
 		if (!($.inArray(place, self.crawlList()) > -1)){  // checks for duplicate locations, JShint throws an error here, but functionality will not be the same if I remove brackets
 			self.crawlList.push(place);
 		} else {
-			alert('This location has already been added to the list!');
+			swal('Sorry!', 'This location has already been added to the list!', 'error');
 		}
 	};
 
 	/*
 	* @description removes selected Location from crawlList, if applicable
-	* @param {object} place - Location Object
+	* @param {object} place - Location Object's name is used
 	*/
 
 	this.removeFromRoute = function(place){ // removes location from list
 		if ($.inArray(place, self.crawlList()) > -1){  // checks for duplicate locations
 			self.crawlList.remove(place);
 		} else {
-			alert('This location has not been added to the list yet!');
+			swal('Try Again!', 'This location has not been added to the list yet!', 'error');
 		}
 	};
 
 	/*
-	* @description takes user defined locations and creates a route, pins route and directions onto window
-	* @param {object} Google Directions API
-	* @param {object} Google Directions API
+	* @description stores user selected locations as waypoints, creates a route on Map and creates a list of directions
+	* @param {google.maps.DirectionsService} Google directionsService - creates directions on map
+	* @param {google.maps.DirectionsRenderer} Google directionsDisplay - creates a list of directions
 	*/
 
 	this.calculateAndDisplayRoute = function(directionsService, directionsDisplay){
@@ -396,7 +399,7 @@ function ViewModel(){
 			if (status === google.maps.DirectionsStatus.OK){
 				window.directionsDisplay.setDirections(response);
 			} else {
-				alert('Directions request failed due to ' + status + ', please try again!');
+				swal('Hmm..', 'Directions request failed due to ' + status + ', please try again!', 'error');
 			}
 		});
 
@@ -416,7 +419,7 @@ function ViewModel(){
 			});
 			self.isLocked(true);
 		} else {
-			alert('You need atleast 2 locations to create a route and are limited to 8 locations');
+			swal('Actually..', 'You need atleast 2 locations to create a route and are limited to 8 locations, try again!', 'error');
 		}
 	};
 
@@ -429,8 +432,8 @@ function ViewModel(){
 	};
 
 	/*
-	* @description clears map markers, user added locations and resets location markers and relocks the button
-	* @param {object} directionsDisplay - directions that are displayed on screen
+	* @description clears map markers, user added locations, resets location markers, clears directionsDisplay and relocks the button
+	* @param {google.maps.DirectionsDisplay} directionsDisplay - directions that are displayed on screen
 	*/
 
 	this.clearRoute = function(directionsDisplay){ //remakes markers, removes last crawlList
@@ -444,7 +447,7 @@ function ViewModel(){
 	};
 
 	/*
-	* @description sets each marker in self.markers() to be visible
+	* @description sets each marker in self.markers() to be visible, used in this.searchFilter()
 	*/
 
 	this.setMarker = function(){
@@ -455,7 +458,7 @@ function ViewModel(){
 
 	/*
 	* @description filters list and marker according to user input
-	* @returns self.locationsList or all places that match the user defined location
+	* @returns self.locationsList or all places that match any part of self.filter()
 	*/
 
 	this.searchFilter = ko.computed(function(){
@@ -478,8 +481,8 @@ function ViewModel(){
 		}
 	});
 }
-// initialize the map
-initMap();
-// bind KO
-var viewModel = new ViewModel();
+
+initMap(); // initialize the map
+
+var viewModel = new ViewModel(); // define then bind viewModel
 ko.applyBindings(viewModel);

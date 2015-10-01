@@ -60,3 +60,6 @@ $('#global-search-about').keypress(function(event) {
 		$('body').panelSnap('snapTo', 'next');
 	}
 });
+
+// sweetAlert Confirm Button Styling
+swal.setDefaults({ confirmButtonColor: '#d3d3d3' });
