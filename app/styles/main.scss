@@ -12,9 +12,10 @@ $icon-font-path: '../fonts/';
 }
 
 /*-------------------------------*/
-/*            Custom             */
+/*            Custom CSS         */
 /*-------------------------------*/
 
+/* @group general style */
 html, body {
   margin: 0;
   padding: 0;
@@ -27,20 +28,6 @@ html, body {
 .poiret-font{
   font-family: 'Poiret One', cursive;
   color: white;
-}
-
-.hero {
-  height:100vh;
-  width:100vw;
-  background:
-  linear-gradient(
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.5)
-    ),
-    url('http://i.imgur.com/hbS4uc6.jpg');
-    background-position: center;
-  background-size: cover;
-  overflow: hidden;
 }
 
 .v-align {
@@ -57,7 +44,52 @@ html, body {
   color: gray !important;
 }
 
-/* Custom Buttons CSS to override Bootstrap*/
+#night-text {
+  font-size: 55px;
+  font-weight: bolder;
+}
+
+/* @group hero images */
+.hero {
+  height:100vh;
+  width:100vw;
+  background:
+  linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url('http://i.imgur.com/hbS4uc6.jpg');
+    background-position: center;
+  background-size: cover;
+  overflow: hidden;
+}
+
+#about-section {
+  height: 100vh;
+  width: 100vw;
+  background:
+  linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url('http://i.imgur.com/PGMbOVJ.jpg');
+    background-position: center;
+  background-size: cover;
+}
+
+#instructions p{
+    font-size: 1.2em;
+}
+#hero-tag {
+  display: block;
+}
+
+#hero-phrase {
+  font-size: 50px;
+  font-weight: lighter;
+}
+
+/* @group Button CSS overrides Bootstraps*/
 .btn {
     padding: 14px 24px;
     border: 0 none;
@@ -88,49 +120,20 @@ html, body {
 .btn-primary.outline {
     background: transparent;
 }
-/* End Button CSS */
 
-#instructions p{
-    font-size: 1.2em;
-}
-#hero-tag {
-  display: block;
-}
-
-#hero-phrase {
-  font-size: 50px;
-  font-weight: lighter;
-}
-
-#night-text {
-  font-size: 55px;
-  font-weight: bolder;
-}
-
-#map-inputs {
-    margin: 10px 10px auto;
-}
-
+/*@map styles the map*/
 #map {
   position: absolute;
   height: 100%;
   width: 100%;
 }
 
-#about-section {
-  height: 100vh;
-  width: 100vw;
-  background:
-  linear-gradient(
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.5)
-    ),
-    url('http://i.imgur.com/PGMbOVJ.jpg');
-    background-position: center;
-  background-size: cover;
+#map-padding { // ensures map takes up entire page width, overrides bootstrap
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 
-/* ListView CSS */
+/*@group List view*/
 #list {
   position: absolute;
   top: 25%;
@@ -155,9 +158,8 @@ html, body {
 .venue-name:hover{
   font-weight: bold;
 }
-/* ListView CSS END */
 
-/* Directions Container CSS */
+/*@group Directions Container */
 #directions-container {
     background: rgba(255,255,255,0.8) !important;
     height: 50%;
@@ -178,7 +180,10 @@ html, body {
     font-size: 1.2em;
 }
 
-/* Google Maps Directions Panel */
+/*-------------------------------*/
+/* Google Maps Direction Panel   */
+/*-------------------------------*/
+/*@group provided CSS*/
 #panel {
   position: absolute;
   top: 10px;
@@ -213,20 +218,7 @@ html, body {
 #panel i, .panel i {
   font-size: 1.2em;
 }
-
-#directions-panel {
-  height: 100%;
-  float: right;
-  width: 100%;
-}
 /* END PANEL CSS */
-
-/* overrides container-fluid padding*/
-#map-padding {
-  padding-left: 0px !important;
-  padding-right: 0px !important;
-}
-
 
 /* For Smaller Devices */
 @media screen and (min-width: 340px) and (max-width: 750px) {
