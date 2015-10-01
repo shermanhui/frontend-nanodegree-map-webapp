@@ -1,10 +1,15 @@
+/**
+ * Creates interactive Map using data from FourSquare to plot a Pub Crawl
+ * @author Sherman Hui
+ * @required knockout.js
+ */
+
 'use strict';
 /* eslint-env node, jquery */
 /* global google, ko */
 /* eslint eqeqeq: 0, quotes: 0, no-alert: 0, no-unused-vars: 0, no-shadow: 0 */
 
-var map, bounds, directionsService, directionsDisplay;
-var infoWindow = new google.maps.InfoWindow();
+var map, bounds, directionsService, directionsDisplay, infoWindow = new google.maps.InfoWindow();
 
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
@@ -14,7 +19,7 @@ var BREWERY_ID = '50327c8591d4c4b30a586d5d';
 /*
 * Represents a Location
 * @constructor
-* @param {JSON} data
+* @param {Object} data
 */
 
 var Location = function(data){

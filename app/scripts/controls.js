@@ -1,6 +1,7 @@
 'use strict';
 /* eslint-env node, jquery */
 /* eslint eqeqeq: 0 */
+
 // Toggles Crawl List
 $('#menu-toggle').click(function(e) {
     e.preventDefault();
