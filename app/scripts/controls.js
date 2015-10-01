@@ -1,5 +1,6 @@
 'use strict';
 /* eslint-env node, jquery */
+/* global swal */
 /* eslint eqeqeq: 0 */
 
 // Toggles Crawl List
