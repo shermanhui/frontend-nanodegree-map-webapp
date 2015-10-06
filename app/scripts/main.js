@@ -45,11 +45,11 @@ var Location = function(data){
 		'</div>' +
 		'<h1 id="firstHeading" class="firstHeading">' + self.name() + '</h1>' +
 		'<div id="bodyContent">' +
-		'<img width="150" src= "'+ self.image() + '" alt= "Instagram Image Here" />' +
+		'<img src= "'+ self.image() + '" alt= "Instagram Image Here" />' +
 		'<p><b>Address and Rating</b></p>' +
 		'<p>' + self.address() + ', FourSquare Rating: ' + self.rating() + '</p>' +
-		'<button class="add btn btn-primary outline gray" data-bind="click: $parent.addToRoute">Add</button>' +
-		'<button class="remove btn btn-primary outline gray" data-bind="click: $parent.removeFromRoute">Remove</button>' +
+		'<button class="add btn btn-primary outline gray" data-bind="click: addToRoute">Add</button>' +
+		'<button class="remove btn btn-primary outline gray" data-bind="click: removeFromRoute">Remove</button>' +
 		'</div>' +
 		'</div>';
 };
@@ -270,8 +270,8 @@ function ViewModel(){
 				icon: venueIcon,
 				fsID: venueID
 			};
-			self.callInstagram(obj);
-			console.log(obj);
+			self.callInstagram(obj); // promise that waits for this to finish
+			console.log(obj.igID);
 			self.locationsList.push(new Location(obj));
 		}
 		self.makeMarkers();
