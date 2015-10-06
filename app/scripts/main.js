@@ -13,6 +13,9 @@ var map, bounds, directionsService, directionsDisplay, infoWindow = new google.m
 
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
+var IG_ID = '9143a566adf74c6a999d5e7ddceaebef';
+var IG_SECRET = 'bf07f991cd1949be84632dfb7e5ec55b';
+var IG_TOKEN = '35149507.9143a56.dbefe25cd56e4059874361a577d8c6c0';
 var BAR_ID = '4bf58dd8d48988d116941735';
 var BREWERY_ID = '50327c8591d4c4b30a586d5d';
 
@@ -30,8 +33,11 @@ var Location = function(data){
 	this.address = ko.observable(data.address);
 	this.rating = ko.observable(data.rating);
 	this.marker = ko.observableArray(data.marker);
-	this.category = ko.observable(data.category);
+	this.fsID = ko.observable(data.fsID);
+	this.igID = ko.observable(data.igID);
+	this.image = ko.observable(data.image);
 	this.icon = ko.observable(data.icon);
+	//console.log(self.name(), self.address(), self.fsID(), self.igID(), self.image());
 
 	this.contentString = // create content string for infoWindow
 		'<div class="text-center" id="content">' +
@@ -39,6 +45,7 @@ var Location = function(data){
 		'</div>' +
 		'<h1 id="firstHeading" class="firstHeading">' + self.name() + '</h1>' +
 		'<div id="bodyContent">' +
+		'<img width="150" src= "'+ self.image() + '" alt= "Instagram Image Here" />' +
 		'<p><b>Address and Rating</b></p>' +
 		'<p>' + self.address() + ', FourSquare Rating: ' + self.rating() + '</p>' +
 		'<button class="add btn btn-primary outline gray" data-bind="click: $parent.addToRoute">Add</button>' +
@@ -249,10 +256,10 @@ function ViewModel(){
 	this.createLocations = function(response){
 		for (var i = 0; i < response.length; i++) {
 			var venue = response[i].venue;
+			var venueID = venue.id;
 			var venueName = venue.name;
 			var venueLoc = venue.location;
 			var venueRating = venue.rating;
-			var venueCategory = venue.categories[0].id;
 			var venueIcon = venue.categories[0].icon.prefix + 'bg_32' + venue.categories[0].icon.suffix;
 			var obj = {
 				name: venueName,
@@ -260,12 +267,46 @@ function ViewModel(){
 				lng: venueLoc.lng,
 				address: venueLoc.address,
 				rating: venueRating,
-				category: venueCategory,
-				icon: venueIcon
+				icon: venueIcon,
+				fsID: venueID
 			};
+			self.callInstagram(obj);
+			console.log(obj);
 			self.locationsList.push(new Location(obj));
 		}
 		self.makeMarkers();
+	};
+
+	/*
+	* @description uses the fs ID to grab an instagram location id then calls getIGImage()
+	* @param {Object} Object with FourSquare data
+	*/
+	this.callInstagram = function(obj){
+		$.ajax({
+			url: 'https://api.instagram.com/v1/locations/search?foursquare_v2_id=' + obj.fsID + '&access_token=' + IG_TOKEN + '',
+			dataType: 'jsonp'
+		}).done(function(response){
+			var instagramID = response.data[0].id;
+			obj.igID = instagramID;
+			self.getIGImage(obj); //call getIGImage to get the image
+		}).fail(function(){
+			swal('Sorry!', 'There was a problem retrieving the Instagram Image :(', 'error');
+		});
+	};
+
+	/*
+	* @description uses the instagram location ID to retrieve the relevant instagram image
+	* @param {Object} Object with FourSquare data and Instagram ID
+	*/
+	this.getIGImage = function(obj){
+		$.ajax({
+			url: 'https://api.instagram.com/v1/locations/' + obj.igID + '/media/recent?&access_token=' + IG_TOKEN + '',
+			dataType: 'jsonp'
+		}).done(function(response){
+			obj.image = response.data[0].images['standard_resolution'].url;
+		}).fail(function(){
+			swal('Sorry!', 'There was a problem retrieving the Instagram Image :(', 'error');
+		});
 	};
 
 	/*
