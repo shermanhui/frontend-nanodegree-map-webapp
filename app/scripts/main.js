@@ -37,7 +37,7 @@ var Location = function(data){
 	this.igID = ko.observable(data.igID);
 	this.image = ko.observable(data.image);
 	this.icon = ko.observable(data.icon);
-	//console.log(self.name(), self.address(), self.fsID(), self.igID(), self.image());
+	console.log(self.name(), self.address(), self.fsID(), self.igID());
 
 	this.contentString = // create content string for infoWindow
 		'<div class="text-center" id="content">' +
@@ -45,7 +45,7 @@ var Location = function(data){
 		'</div>' +
 		'<h1 id="firstHeading" class="firstHeading">' + self.name() + '</h1>' +
 		'<div id="bodyContent">' +
-		'<img src= "'+ self.image() + '" alt= "Instagram Image Here" />' +
+		'<img width="150" src= "'+ self.image() + '" alt= "Instagram Image Here" />' +
 		'<p><b>Address and Rating</b></p>' +
 		'<p>' + self.address() + ', FourSquare Rating: ' + self.rating() + '</p>' +
 		'<button class="add btn btn-primary outline gray" data-bind="click: addToRoute">Add</button>' +
@@ -270,18 +270,27 @@ function ViewModel(){
 				icon: venueIcon,
 				fsID: venueID
 			};
-			self.callInstagram(obj); // promise that waits for this to finish
-			console.log(obj.igID);
 			self.locationsList.push(new Location(obj));
 		}
 		self.makeMarkers();
 	};
 
+
+	// this.getInstagramID = function(obj){
+	// 	return Q.when($.ajax({
+	// 		url: 'https://api.instagram.com/v1/locations/search?foursquare_v2_id=' + obj.fsID + '&access_token=' + IG_TOKEN + '',
+	// 		dataType: 'jsonp'})
+	// 	.then(function(response){
+	// 		var id = response.data[0].id;
+	// 		obj.igID = id;
+	// 	}));
+	// }
+
 	/*
 	* @description uses the fs ID to grab an instagram location id then calls getIGImage()
 	* @param {Object} Object with FourSquare data
 	*/
-	this.callInstagram = function(obj){
+	this.getInstagramID = function(obj){
 		$.ajax({
 			url: 'https://api.instagram.com/v1/locations/search?foursquare_v2_id=' + obj.fsID + '&access_token=' + IG_TOKEN + '',
 			dataType: 'jsonp'

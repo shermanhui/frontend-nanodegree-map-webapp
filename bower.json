@@ -19,6 +19,7 @@
     "mocha": "~2.2.5",
     "knockout": "~3.3.0",
     "sweetalert":"1.1.0",
-    "panelsnap": "~0.14.0"
+    "panelsnap": "~0.14.0",
+    "q" : "1.0.1"
   }
 }
