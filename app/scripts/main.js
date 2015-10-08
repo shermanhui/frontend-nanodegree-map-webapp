@@ -270,12 +270,17 @@ function ViewModel(){
 				icon: venueIcon,
 				fsID: venueID
 			};
-			self.locationsList.push(new Location(obj));
+			self.locationsList().push(new Location(obj));
+			// Try using basic when/then
+			// var deferred = self.getInstagramID(obj);
+			// $.when(deferred).then(function(obj){
+			// 	self.locationsList().push(new Location(obj))
+			// });
 		}
 		self.makeMarkers();
 	};
 
-
+	// not sure how to use Q.js...
 	// this.getInstagramID = function(obj){
 	// 	return Q.when($.ajax({
 	// 		url: 'https://api.instagram.com/v1/locations/search?foursquare_v2_id=' + obj.fsID + '&access_token=' + IG_TOKEN + '',
