@@ -219,6 +219,11 @@ html, body {
   font-size: 1.2em;
 }
 /* END PANEL CSS */
+.navbar-default, .navbar-collapse, .navbar-default, .navbar-form {
+  background: rgba(231, 231, 231, 0.7) !important;
+  margin-bottom: 0;
+}
+
 
 /* For Smaller Devices */
 @media screen and (min-width: 340px) and (max-width: 750px) {

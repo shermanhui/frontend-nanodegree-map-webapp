@@ -4,6 +4,7 @@
  * @required knockout.js, panelsnap.js, sweetalert.min.js
  */
 
+// TO DO: Fix Map Centering and Zoom, Fix InfoWindow in mobile view
 'use strict';
 /* eslint-env node, jquery */
 /* global google, ko, swal*/
@@ -32,7 +33,7 @@ var Location = function(data){
 	this.lng = ko.observable(data.lng);
 	this.address = ko.observable(data.address);
 	this.rating = ko.observable(data.rating);
-	this.marker = ko.observableArray(data.marker);
+	//this.marker = ko.observableArray(data.marker);
 	this.fsID = ko.observable(data.fsID);
 	this.igID = ko.observable(data.igID);
 	this.image = ko.observable(data.image);
@@ -295,10 +296,8 @@ function ViewModel(){
 			} else {
 				deferred.reject(new Error("IG API failed"))
 			}
-		}).fail(function(xhr, textStatus, errorThrown) {
+		}).fail(function(reponse) {
 			var error = new Error("Ajax request for IG ID failed");
-			error.textStatus = textStatus;
-			error.errorThrown = errorThrown;
 			deferred.reject(error);
 		});
 
