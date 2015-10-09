@@ -37,21 +37,20 @@ var Location = function(data){
 	this.igID = ko.observable(data.igID);
 	this.image = ko.observable(data.image);
 	this.icon = ko.observable(data.icon);
-	console.log(self.name(), self.address(), self.fsID(), self.igID());
-
 	this.contentString = // create content string for infoWindow
 		'<div class="text-center" id="content">' +
 		'<div id="siteNotice">' +
 		'</div>' +
 		'<h1 id="firstHeading" class="firstHeading">' + self.name() + '</h1>' +
 		'<div id="bodyContent">' +
-		'<img width="150" src= "'+ self.image() + '" alt= "Instagram Image Here" />' +
+		'<img width="150" height="150" src= "'+ self.image() + '" alt= "Instagram Image Here" />' +
 		'<p><b>Address and Rating</b></p>' +
 		'<p>' + self.address() + ', FourSquare Rating: ' + self.rating() + '</p>' +
 		'<button class="add btn btn-primary outline gray" data-bind="click: addToRoute">Add</button>' +
 		'<button class="remove btn btn-primary outline gray" data-bind="click: removeFromRoute">Remove</button>' +
 		'</div>' +
 		'</div>';
+	this.marker = viewModel.makeMarker(data.lat, data.lng, data.name, data.icon, self.contentString);
 };
 
 /*
@@ -232,7 +231,7 @@ function ViewModel(){
 				self.clearData(); // makes sure crawl List and directions display is emptied out on new location search
 				self.clearRoute(directionsDisplay); // empties out any previously created route in crawl List
 				self.createLocations(response); // creates new list of locations to populate map
-				map.setCenter({lat: self.locationsList()[5].lat(), lng: self.locationsList()[15].lng()}); // hacky way of getting map to re-center on new search
+				//map.setCenter({lat: self.locationsList()[5].lat(), lng: self.locationsList()[15].lng()}); // hacky way of getting map to re-center on new search
 				map.setZoom(13);
 			})
 			.fail(function(error){
@@ -270,42 +269,40 @@ function ViewModel(){
 				icon: venueIcon,
 				fsID: venueID
 			};
-			self.locationsList().push(new Location(obj));
-			// Try using basic when/then
-			// var deferred = self.getInstagramID(obj);
-			// $.when(deferred).then(function(obj){
-			// 	self.locationsList().push(new Location(obj))
-			// });
-		}
-		self.makeMarkers();
-	};
 
-	// not sure how to use Q.js...
-	// this.getInstagramID = function(obj){
-	// 	return Q.when($.ajax({
-	// 		url: 'https://api.instagram.com/v1/locations/search?foursquare_v2_id=' + obj.fsID + '&access_token=' + IG_TOKEN + '',
-	// 		dataType: 'jsonp'})
-	// 	.then(function(response){
-	// 		var id = response.data[0].id;
-	// 		obj.igID = id;
-	// 	}));
-	// }
+			self.getIGImage(obj)
+			//self.locationsList().push(new Location(obj))
+		}
+		//self.makeMarkers()
+	};
 
 	/*
 	* @description uses the fs ID to grab an instagram location id then calls getIGImage()
 	* @param {Object} Object with FourSquare data
 	*/
 	this.getInstagramID = function(obj){
+		var deferred = Q.defer();
+
 		$.ajax({
 			url: 'https://api.instagram.com/v1/locations/search?foursquare_v2_id=' + obj.fsID + '&access_token=' + IG_TOKEN + '',
 			dataType: 'jsonp'
 		}).done(function(response){
-			var instagramID = response.data[0].id;
-			obj.igID = instagramID;
-			self.getIGImage(obj); //call getIGImage to get the image
-		}).fail(function(){
-			swal('Sorry!', 'There was a problem retrieving the Instagram Image :(', 'error');
+			var status = response.meta.code;
+			if (status === 200){
+				var instagramID = response.data[0].id;
+				obj.igID = instagramID;
+				deferred.resolve(obj)
+			} else {
+				deferred.reject(new Error("IG API failed"))
+			}
+		}).fail(function(xhr, textStatus, errorThrown) {
+			var error = new Error("Ajax request for IG ID failed");
+			error.textStatus = textStatus;
+			error.errorThrown = errorThrown;
+			deferred.reject(error);
 		});
+
+		return deferred.promise;
 	};
 
 	/*
@@ -313,14 +310,18 @@ function ViewModel(){
 	* @param {Object} Object with FourSquare data and Instagram ID
 	*/
 	this.getIGImage = function(obj){
-		$.ajax({
-			url: 'https://api.instagram.com/v1/locations/' + obj.igID + '/media/recent?&access_token=' + IG_TOKEN + '',
-			dataType: 'jsonp'
-		}).done(function(response){
-			obj.image = response.data[0].images['standard_resolution'].url;
-		}).fail(function(){
-			swal('Sorry!', 'There was a problem retrieving the Instagram Image :(', 'error');
-		});
+		self.getInstagramID(obj).then(function(obj){
+			$.ajax({
+				url: 'https://api.instagram.com/v1/locations/' + obj.igID + '/media/recent?&access_token=' + IG_TOKEN + '',
+				dataType: 'jsonp'
+			}).done(function(response){
+				obj.image = response.data[0].images['standard_resolution'].url;
+				self.locationsList().push(new Location(obj));
+				return obj;
+			}).fail(function(){
+				swal('Sorry!', 'There was a problem retrieving the Instagram Image :(', 'error');
+			});
+		})
 	};
 
 	/*
@@ -338,6 +339,31 @@ function ViewModel(){
 	* @description makes a marker for each Location produced by the ajax call, extends the map to fit all markers and opens infowindows on marker click
 	*/
 
+	this.makeMarker = function(lat, lng, name, icon, contentString){
+		var myLatLng = new google.maps.LatLng(lat, lng);
+		var marker = new google.maps.Marker({
+			position: myLatLng,
+			map: map,
+			title: name,
+			icon: icon
+		});
+		bounds.extend(myLatLng);
+
+		self.markers.push(marker);
+
+		google.maps.event.addListener(marker, 'click', (function(marker, contentString) {
+				return function() {
+					var thisMarker = this;
+					infoWindow.setContent(contentString);
+					infoWindow.open(map, marker);
+					thisMarker.setAnimation(google.maps.Animation.BOUNCE);
+					setTimeout(function(){
+						thisMarker.setAnimation(null);
+					}, 750);
+				};
+			})(marker, contentString));
+			map.fitBounds(bounds);
+	};
 	this.makeMarkers = function(){
 		// for each Location plant a marker at the given lat,lng and on click show the info window
 		self.locationsList().forEach(function(place){
