@@ -4,7 +4,7 @@
  * @required knockout.js, panelsnap.js, sweetalert.min.js
  */
 
-// TO DO: Add Loading Icon, STYLE INFOWINDOWS
+// TO DO: Add Loading Icon, STYLE INFOWINDOWS, duplicate functions in makeMarker and makeMarkers...map.fitBounds() doesn't play nice
 'use strict';
 /* eslint-env node, jquery */
 /* global google, ko, swal*/
@@ -33,6 +33,7 @@ var Location = function(data){
 	this.lng = ko.observable(data.lng);
 	this.address = ko.observable(data.address);
 	this.rating = ko.observable(data.rating);
+	this.hours = ko.observable(data.hours);
 	//this.marker = ko.observableArray(data.marker);
 	this.fsID = ko.observable(data.fsID);
 	this.igID = ko.observable(data.igID);
@@ -46,6 +47,8 @@ var Location = function(data){
 		'<div id="bodyContent">' +
 		'<p><b>Address and Rating</b></p>' +
 		'<p>' + self.address() + ', FourSquare Rating: ' + self.rating() + '</p>' +
+		'<p><b>Hours</b></p>' +
+		'<p>' + self.hours() + '</p>' +
 		'<p><b>Latest Instagram</b></p>' +
 		'<img width="150" height="150" src= "'+ self.image() + '" alt= "Instagram Image Here" />' +
 		'<br>' +
@@ -53,7 +56,7 @@ var Location = function(data){
 		'<button class="btn btn-primary outline gray" data-bind="click: removeFromRoute">Remove</button>' +
 		'</div>' +
 		'</div>';
-	this.marker = viewModel.makeMarker(data.lat, data.lng, data.name, data.icon, self.contentString);
+	this.marker = viewModel.makeMarker(data, self.contentString);
 };
 
 /*
@@ -245,7 +248,6 @@ function ViewModel(){
 	this.centerMap = function(location){
 		geocoder.geocode({'address': location}, function(results, status){
 			if (status == google.maps.GeocoderStatus.OK){
-				console.log(results[0].geometry.location)
 				map.setCenter(results[0].geometry.location);
 			} else {
 				alert('Geocoder failed because of: ' + status)
@@ -268,12 +270,14 @@ function ViewModel(){
 	* @param {JSON} response FourSquare API data information used to create Location Objects
 	*/
 	this.createLocations = function(response, location){
+		console.log(response);
 		for (var i = 0; i < response.length; i++) {
 			var venue = response[i].venue;
 			var venueID = venue.id;
 			var venueName = venue.name;
 			var venueLoc = venue.location;
 			var venueRating = venue.rating;
+			var venueHours = venue.hours.status;
 			var venueIcon = venue.categories[0].icon.prefix + 'bg_32' + venue.categories[0].icon.suffix;
 			var obj = {
 				name: venueName,
@@ -281,14 +285,13 @@ function ViewModel(){
 				lng: venueLoc.lng,
 				address: venueLoc.address,
 				rating: venueRating,
+				hours: venueHours,
 				icon: venueIcon,
 				fsID: venueID
 			};
 
 			self.getIGImage(obj)
-			//self.locationsList().push(new Location(obj))
 		}
-		//self.makeMarkers()
 	};
 
 	/*
@@ -349,34 +352,36 @@ function ViewModel(){
 	};
 
 	/*
-	* @description makes a marker for each Location produced by the ajax call, extends the map to fit all markers and opens infowindows on marker click
+	* @description makes a marker for each location object produced by the ajax call, extends the map to fit all markers and opens infowindows on marker click
+	* @param {object} object with FourSquare location data such as icon image, lat, lng, and location name
+	* @param {string} DOM elements for InfoWindow content
+	* @returns {Google Map Marker} Markers populate on google map with respective icons at respective lat lng
 	*/
 
-	this.makeMarker = function(lat, lng, name, icon, contentString){
-		var myLatLng = new google.maps.LatLng(lat, lng);
+	this.makeMarker = function(data, contentString){
+		var myLatLng = new google.maps.LatLng(data.lat, data.lng);
 		var marker = new google.maps.Marker({
 			position: myLatLng,
 			map: map,
-			title: name,
-			icon: icon
+			title: data.name,
+			icon: data.icon
 		});
-		bounds.extend(myLatLng);
 
-		self.markers.push(marker);
+		self.markers.push(marker); // pushes a marker into the array of markers to be tracked on search
 
 		google.maps.event.addListener(marker, 'click', (function(marker, contentString) {
-				return function() {
-					var thisMarker = this;
-					infoWindow.setContent(contentString);
-					infoWindow.open(map, marker);
-					thisMarker.setAnimation(google.maps.Animation.BOUNCE);
-					setTimeout(function(){
-						thisMarker.setAnimation(null);
-					}, 750);
-				};
-			})(marker, contentString));
-			//map.fitBounds(bounds);
+			return function() {
+				var thisMarker = this;
+				infoWindow.setContent(contentString);
+				infoWindow.open(map, marker);
+				thisMarker.setAnimation(google.maps.Animation.BOUNCE);
+				setTimeout(function(){
+					thisMarker.setAnimation(null);
+				}, 750);
+			};
+		})(marker, contentString));
 	};
+
 	this.makeMarkers = function(){
 		// for each Location plant a marker at the given lat,lng and on click show the info window
 		self.locationsList().forEach(function(place){
@@ -509,7 +514,7 @@ function ViewModel(){
 		if (self.crawlList().length > 1 && self.crawlList().length < 8){
 			self.calculateAndDisplayRoute(directionsService, directionsDisplay);
 			self.markers().forEach(function(marker){
-				marker.setMap(null);
+				marker.setVisible(false);
 			});
 			self.isLocked(true);
 		} else {
@@ -544,10 +549,10 @@ function ViewModel(){
 	* @description sets each marker in self.markers() to be visible, used in this.searchFilter()
 	*/
 
-	this.setMarker = function(){
-		for (var i = 0; i < self.markers().length; i++){
-			self.markers()[i].setVisible(true);
-		}
+	this.showMarker = function(){
+		self.markers().forEach(function(marker){
+			marker.setVisible(true);
+		})
 	};
 
 	/*
@@ -558,7 +563,7 @@ function ViewModel(){
 	this.searchFilter = ko.computed(function(){
 		var filter = self.filter().toLowerCase();
 		if (!filter){
-			self.setMarker(); // sets all markers to be visible
+			self.showMarker(); // sets all markers to be visible
 			infoWindow.close(); // closes all infowindows on search
 			return self.locationsList(); // returns all locations in self.locationsList
 		} else {
