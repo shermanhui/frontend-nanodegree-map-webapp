@@ -4,7 +4,7 @@
  * @required knockout.js, panelsnap.js, sweetalert.min.js
  */
 
-// TO DO: Fix Map Centering and Zoom, Fix InfoWindow in mobile view
+// TO DO: Fix Map Centering and Zoom, STYLE INFOWINDOWS
 'use strict';
 /* eslint-env node, jquery */
 /* global google, ko, swal*/
@@ -47,8 +47,8 @@ var Location = function(data){
 		'<img width="150" height="150" src= "'+ self.image() + '" alt= "Instagram Image Here" />' +
 		'<p><b>Address and Rating</b></p>' +
 		'<p>' + self.address() + ', FourSquare Rating: ' + self.rating() + '</p>' +
-		'<button class="add btn btn-primary outline gray" data-bind="click: addToRoute">Add</button>' +
-		'<button class="remove btn btn-primary outline gray" data-bind="click: removeFromRoute">Remove</button>' +
+		'<button class="btn btn-primary outline gray" data-bind="click: addToRoute">Add</button>' +
+		'<button class="btn btn-primary outline gray" data-bind="click: removeFromRoute">Remove</button>' +
 		'</div>' +
 		'</div>';
 	this.marker = viewModel.makeMarker(data.lat, data.lng, data.name, data.icon, self.contentString);
@@ -233,7 +233,7 @@ function ViewModel(){
 				self.clearRoute(directionsDisplay); // empties out any previously created route in crawl List
 				self.createLocations(response); // creates new list of locations to populate map
 				//map.setCenter({lat: self.locationsList()[5].lat(), lng: self.locationsList()[15].lng()}); // hacky way of getting map to re-center on new search
-				map.setZoom(13);
+				//map.setZoom(13);
 			})
 			.fail(function(error){
 				swal('Uh Oh!', 'There was a problem retrieving the location, please double check your search query!', 'error');
