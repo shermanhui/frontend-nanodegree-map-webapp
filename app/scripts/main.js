@@ -4,13 +4,13 @@
  * @required knockout.js, panelsnap.js, sweetalert.min.js
  */
 
-// TO DO: Fix Map Centering and Zoom, STYLE INFOWINDOWS
+// TO DO: Add Loading Icon, STYLE INFOWINDOWS
 'use strict';
 /* eslint-env node, jquery */
 /* global google, ko, swal*/
 /* eslint eqeqeq: 0, quotes: 0, no-unused-vars: 0, no-shadow: 0 */
 
-var map, bounds, directionsService, directionsDisplay, infoWindow = new google.maps.InfoWindow();
+var map, geocoder, bounds, directionsService, directionsDisplay, infoWindow = new google.maps.InfoWindow();
 
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
@@ -44,9 +44,11 @@ var Location = function(data){
 		'</div>' +
 		'<h1 id="firstHeading" class="firstHeading">' + self.name() + '</h1>' +
 		'<div id="bodyContent">' +
-		'<img width="150" height="150" src= "'+ self.image() + '" alt= "Instagram Image Here" />' +
 		'<p><b>Address and Rating</b></p>' +
 		'<p>' + self.address() + ', FourSquare Rating: ' + self.rating() + '</p>' +
+		'<p><b>Latest Instagram</b></p>' +
+		'<img width="150" height="150" src= "'+ self.image() + '" alt= "Instagram Image Here" />' +
+		'<br>' +
 		'<button class="btn btn-primary outline gray" data-bind="click: addToRoute">Add</button>' +
 		'<button class="btn btn-primary outline gray" data-bind="click: removeFromRoute">Remove</button>' +
 		'</div>' +
@@ -58,9 +60,11 @@ var Location = function(data){
 * @function initializes GoogleMaps and its styles
 */
 function initMap() {
+	geocoder = new google.maps.Geocoder();
 	bounds = new google.maps.LatLngBounds();
 	map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 49.2844, lng: -123.1089},
+		zoom: 13,
 		disableDefaultUI: true
 	});
 
@@ -232,13 +236,22 @@ function ViewModel(){
 				self.clearData(); // makes sure crawl List and directions display is emptied out on new location search
 				self.clearRoute(directionsDisplay); // empties out any previously created route in crawl List
 				self.createLocations(response); // creates new list of locations to populate map
-				//map.setCenter({lat: self.locationsList()[5].lat(), lng: self.locationsList()[15].lng()}); // hacky way of getting map to re-center on new search
-				//map.setZoom(13);
 			})
 			.fail(function(error){
 				swal('Uh Oh!', 'There was a problem retrieving the location, please double check your search query!', 'error');
 			});
 	};
+
+	this.centerMap = function(location){
+		geocoder.geocode({'address': location}, function(results, status){
+			if (status == google.maps.GeocoderStatus.OK){
+				console.log(results[0].geometry.location)
+				map.setCenter(results[0].geometry.location);
+			} else {
+				alert('Geocoder failed because of: ' + status)
+			}
+		});
+	}
 
 	/*
 	* @description listens for new user defined location value to update google maps
@@ -246,6 +259,7 @@ function ViewModel(){
 
 	this.searchLocations = ko.computed(function(){ //loads user defined location; default is Vancouver
 		var location = self.locInput().toLowerCase();
+		self.centerMap(location);
 		self.loadLocations(location);
 	});
 
@@ -253,7 +267,7 @@ function ViewModel(){
 	* @description takes data from FourSquare API call, makes Location Objects and pushes them into a KO Observable Array, also make map markers
 	* @param {JSON} response FourSquare API data information used to create Location Objects
 	*/
-	this.createLocations = function(response){
+	this.createLocations = function(response, location){
 		for (var i = 0; i < response.length; i++) {
 			var venue = response[i].venue;
 			var venueID = venue.id;
@@ -361,7 +375,7 @@ function ViewModel(){
 					}, 750);
 				};
 			})(marker, contentString));
-			map.fitBounds(bounds);
+			//map.fitBounds(bounds);
 	};
 	this.makeMarkers = function(){
 		// for each Location plant a marker at the given lat,lng and on click show the info window

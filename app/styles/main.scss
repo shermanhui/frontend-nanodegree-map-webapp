@@ -230,13 +230,13 @@ html, body {
 @media screen and (min-width: 340px) and (max-width: 750px) {
   #directions-container{
     visibility: hidden;
-    width: 50%;
+    //width: 50%;
   }
 
   #list {
     visibility: hidden;
-    height: 50%;
-    width: 50%;
+    //height: 50%;
+    //width: 50%;
     overflow-y: auto;
     font-size: 1.5em;
     padding: 0;
