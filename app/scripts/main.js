@@ -6,8 +6,8 @@
 
 'use strict';
 /* eslint-env node, jquery */
-/* global google, ko, swal*/
-/* eslint eqeqeq: 0, quotes: 0, no-unused-vars: 0, no-shadow: 0 */
+/* global google, ko, swal, Q, opts, Spinner*/
+/* eslint eqeqeq: 0, quotes: 0, no-unused-vars: 0, no-shadow: 0, no-use-before-define: 0*/
 
 var map, geocoder, bounds, directionsService, directionsDisplay, infoWindow = new google.maps.InfoWindow(), spinner;
 
@@ -44,7 +44,7 @@ var Location = function(data){
 		'<p><b>Address and Rating</b></p>' +
 		'<p>' + self.address() + ', FourSquare Rating: ' + self.rating() + '</p>' +
 		'<p><b>Latest Instagram</b></p>' +
-		'<img width="150" height="150" src= "'+ self.image() + '" alt= "Instagram Image Here" />' +
+		'<img width="150" height="150" src= "' + self.image() + '" alt= "Instagram Image Here" />' +
 		'<br>' +
 		'<button class="btn btn-primary outline gray" data-bind="click: addToRoute">Add</button>' +
 		'<button class="btn btn-primary outline gray" data-bind="click: removeFromRoute">Remove</button>' +
@@ -239,6 +239,10 @@ function ViewModel(){
 			});
 	};
 
+	/*
+	* @description centers the map based on the user defined location that is converted into lat/lng by Google Geocode
+	* @param {KO Observable} location - a user defined string
+	*/
 	this.centerMap = function(location){
 		geocoder.geocode({'address': location}, function(results, status){
 			if (status == google.maps.GeocoderStatus.OK){
@@ -247,7 +251,7 @@ function ViewModel(){
 				swal('Geocoding your location failed!', 'Geocoder failed because of: ' + status, 'error'); // not necessary b.c line 244 handles bad location queries
 			}
 		});
-	}
+	};
 
 	/*
 	* @description listens for new user defined location value to update google maps
@@ -263,6 +267,7 @@ function ViewModel(){
 	* @description takes data from FourSquare API call, makes Location Objects and pushes them into a KO Observable Array, shows a spinner while data loads
 	* @param {JSON} response FourSquare API data information used to create Location Objects
 	*/
+
 	this.createLocations = function(response){
 		var target = document.getElementById('map'); // sets target for spinner
 		spinner = new Spinner(opts).spin(target); // invoke spinner with options defined in controls.js onto google maps on new location search
@@ -282,7 +287,7 @@ function ViewModel(){
 				icon: venueIcon,
 				fsID: venueID
 			};
-			self.getIGImage(obj)
+			self.getIGImage(obj);
 		}
 	};
 
@@ -302,9 +307,9 @@ function ViewModel(){
 			if (status === 200){
 				var instagramID = response.data[0].id;
 				obj.igID = instagramID;
-				deferred.resolve(obj)
+				deferred.resolve(obj);
 			} else {
-				deferred.reject(new Error("IG API failed"))
+				deferred.reject(new Error("IG API failed"));
 			}
 		}).fail(function(reponse) {
 			var error = new Error("Ajax request for IG ID failed");
@@ -325,7 +330,7 @@ function ViewModel(){
 				url: 'https://api.instagram.com/v1/locations/' + obj.igID + '/media/recent?&access_token=' + IG_TOKEN + '',
 				dataType: 'jsonp'
 			}).done(function(response){
-				obj.image = response.data[0].images['standard_resolution'].url;
+				obj.image = response.data[0].images.statndard_resolution.url;
 				self.locationsList().push(new Location(obj));
 			}).fail(function(){
 				swal('Sorry!', 'There was a problem retrieving the Instagram Image :(', 'error');
@@ -334,7 +339,7 @@ function ViewModel(){
 			swal('Sorry!', 'There was a problem, ' + error, 'error');
 		}).then(function(){
 			spinner.stop();
-		})
+		});
 	};
 
 	/*
@@ -555,7 +560,7 @@ function ViewModel(){
 	this.showMarker = function(){
 		self.markers().forEach(function(marker){
 			marker.setVisible(true);
-		})
+		});
 	};
 
 	/*

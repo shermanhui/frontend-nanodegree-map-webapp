@@ -1,7 +1,7 @@
 'use strict';
 /* eslint-env node, jquery */
-/* global swal */
-/* eslint eqeqeq: 0 */
+/* global swal, opts */
+/* eslint eqeqeq: 0 no-unused-vars: 0*/
 
 // options for spin.js spinner
 var opts = {
