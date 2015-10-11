@@ -134,7 +134,7 @@ html, body {
 }
 
 /*@group List view*/
-#list {
+#placeList {
   position: absolute;
   top: 25%;
   height: 50%;
@@ -144,7 +144,7 @@ html, body {
   padding: 0;
 }
 
-#list li {
+#placeList li {
   list-style-type: none;
   background:rgba(255,255,255,0.8);
   padding: 10px 0;
@@ -219,6 +219,7 @@ html, body {
   font-size: 1.2em;
 }
 /* END PANEL CSS */
+
 .navbar-default, .navbar-collapse, .navbar-default, .navbar-form {
   background: rgba(231, 231, 231, 0.7) !important;
   border-bottom: 1px solid black;
@@ -230,13 +231,13 @@ html, body {
 @media screen and (min-width: 340px) and (max-width: 750px) {
   #directions-container{
     visibility: hidden;
-    //width: 50%;
+    width: 50%;
   }
 
-  #list {
+  #placeList {
     visibility: hidden;
-    //height: 50%;
-    //width: 50%;
+    height: 50%;
+    width: 50%;
     overflow-y: auto;
     font-size: 1.5em;
     padding: 0;

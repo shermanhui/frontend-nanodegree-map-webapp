@@ -1,16 +1,15 @@
 /**
- * Creates interactive Map using data from FourSquare to plot a Pub Crawl
+ * Creates interactive Map using data from FourSquare and Instagram to allow users to createa a custom pub crawl route
  * @author Sherman Hui
  * @required knockout.js, panelsnap.js, sweetalert.min.js
  */
 
-// TO DO: Add Loading Icon, STYLE INFOWINDOWS, duplicate functions in makeMarker and makeMarkers...map.fitBounds() doesn't play nice
 'use strict';
 /* eslint-env node, jquery */
 /* global google, ko, swal*/
 /* eslint eqeqeq: 0, quotes: 0, no-unused-vars: 0, no-shadow: 0 */
 
-var map, geocoder, bounds, directionsService, directionsDisplay, infoWindow = new google.maps.InfoWindow();
+var map, geocoder, bounds, directionsService, directionsDisplay, infoWindow = new google.maps.InfoWindow(), spinner;
 
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
@@ -34,21 +33,16 @@ var Location = function(data){
 	this.address = ko.observable(data.address);
 	this.rating = ko.observable(data.rating);
 	this.hours = ko.observable(data.hours);
-	//this.marker = ko.observableArray(data.marker);
 	this.fsID = ko.observable(data.fsID);
 	this.igID = ko.observable(data.igID);
 	this.image = ko.observable(data.image);
 	this.icon = ko.observable(data.icon);
 	this.contentString = // create content string for infoWindow
 		'<div class="text-center" id="content">' +
-		'<div id="siteNotice">' +
-		'</div>' +
-		'<h1 id="firstHeading" class="firstHeading">' + self.name() + '</h1>' +
-		'<div id="bodyContent">' +
+		'<h1>' + self.name() + '</h1>' +
+		'<div>' +
 		'<p><b>Address and Rating</b></p>' +
 		'<p>' + self.address() + ', FourSquare Rating: ' + self.rating() + '</p>' +
-		'<p><b>Hours</b></p>' +
-		'<p>' + self.hours() + '</p>' +
 		'<p><b>Latest Instagram</b></p>' +
 		'<img width="150" height="150" src= "'+ self.image() + '" alt= "Instagram Image Here" />' +
 		'<br>' +
@@ -199,7 +193,7 @@ function initMap() {
 
 	// adds search bars and list view onto map, sets styled map
 	map.controls[google.maps.ControlPosition.LEFT_CENTER].push(document.getElementById('directions-container'));
-	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'));
+	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('placeList'));
 	map.mapTypes.set('map_style', styledMap); // sets styles to new styled map
 	map.setMapTypeId('map_style'); // gives map a new id
 }
@@ -266,18 +260,18 @@ function ViewModel(){
 	});
 
 	/*
-	* @description takes data from FourSquare API call, makes Location Objects and pushes them into a KO Observable Array, also make map markers
+	* @description takes data from FourSquare API call, makes Location Objects and pushes them into a KO Observable Array, shows a spinner while data loads
 	* @param {JSON} response FourSquare API data information used to create Location Objects
 	*/
 	this.createLocations = function(response){
-		console.log(response);
+		var target = document.getElementById('map'); // sets target for spinner
+		spinner = new Spinner(opts).spin(target); // invoke spinner with options defined in controls.js onto google maps on new location search
 		for (var i = 0; i < response.length; i++) {
 			var venue = response[i].venue;
 			var venueID = venue.id;
 			var venueName = venue.name;
 			var venueLoc = venue.location;
 			var venueRating = venue.rating;
-			var venueHours = venue.hours.status;
 			var venueIcon = venue.categories[0].icon.prefix + 'bg_32' + venue.categories[0].icon.suffix;
 			var obj = {
 				name: venueName,
@@ -285,11 +279,9 @@ function ViewModel(){
 				lng: venueLoc.lng,
 				address: venueLoc.address,
 				rating: venueRating,
-				hours: venueHours,
 				icon: venueIcon,
 				fsID: venueID
 			};
-
 			self.getIGImage(obj)
 		}
 	};
@@ -298,6 +290,7 @@ function ViewModel(){
 	* @description uses the fs ID to grab an instagram location id then calls getIGImage()
 	* @param {Object} Object with FourSquare data
 	*/
+
 	this.getInstagramID = function(obj){
 		var deferred = Q.defer();
 
@@ -325,6 +318,7 @@ function ViewModel(){
 	* @description uses the instagram location ID to retrieve the relevant instagram image
 	* @param {Object} Object with FourSquare data and Instagram ID
 	*/
+
 	this.getIGImage = function(obj){
 		self.getInstagramID(obj).then(function(obj){
 			$.ajax({
@@ -333,12 +327,13 @@ function ViewModel(){
 			}).done(function(response){
 				obj.image = response.data[0].images['standard_resolution'].url;
 				self.locationsList().push(new Location(obj));
-				return obj;
 			}).fail(function(){
 				swal('Sorry!', 'There was a problem retrieving the Instagram Image :(', 'error');
 			});
 		}).catch(function(error){
-			swal('Sorry!', 'There was a problem with your request: ' + error, 'error');
+			swal('Sorry!', 'There was a problem, ' + error, 'error');
+		}).then(function(){
+			spinner.stop();
 		})
 	};
 
@@ -384,7 +379,12 @@ function ViewModel(){
 		})(marker, contentString));
 	};
 
-	this.makeMarkers = function(){
+	/*
+	* @description does similar job to above function, but is invoked when user resets the map markers after making a route, bounding works in this function
+	* @returns {Google Map Marker} Markers populate on google map with respective icons at respective lat lng
+	*/
+
+	this.resetMarkers = function(){
 		// for each Location plant a marker at the given lat,lng and on click show the info window
 		self.locationsList().forEach(function(place){
 			var myLatLng = new google.maps.LatLng(place.lat(), place.lng());
@@ -438,6 +438,7 @@ function ViewModel(){
 	* @description set timeout function for marker to stop bouncing
 	* @param {google.maps.Marker} marker - takes a google maps marker
 	*/
+
 	this.stopMarker = function(currentMarker){
 		setTimeout(function(){
 			currentMarker.setAnimation(null);
@@ -539,7 +540,7 @@ function ViewModel(){
 
 	this.clearRoute = function(directionsDisplay){ //remakes markers, removes last crawlList
 		self.crawlList.removeAll();
-		self.makeMarkers();
+		self.resetMarkers();
 		if (directionsDisplay != null){ //JShint throws an error here, but code will break if I use "!=="
 			window.directionsDisplay.setMap(null);
 			window.directionsDisplay.setPanel(null);
