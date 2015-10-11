@@ -330,7 +330,7 @@ function ViewModel(){
 				url: 'https://api.instagram.com/v1/locations/' + obj.igID + '/media/recent?&access_token=' + IG_TOKEN + '',
 				dataType: 'jsonp'
 			}).done(function(response){
-				obj.image = response.data[0].images.statndard_resolution.url;
+				obj.image = response.data[0].images.standard_resolution.url;
 				self.locationsList().push(new Location(obj));
 			}).fail(function(){
 				swal('Sorry!', 'There was a problem retrieving the Instagram Image :(', 'error');
