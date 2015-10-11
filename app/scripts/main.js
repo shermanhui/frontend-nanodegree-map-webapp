@@ -250,7 +250,7 @@ function ViewModel(){
 			if (status == google.maps.GeocoderStatus.OK){
 				map.setCenter(results[0].geometry.location);
 			} else {
-				alert('Geocoder failed because of: ' + status)
+				swal('Geocoding your location failed!', 'Geocoder failed because of: ' + status, 'error'); // not necessary b.c line 244 handles bad location queries
 			}
 		});
 	}
@@ -269,7 +269,7 @@ function ViewModel(){
 	* @description takes data from FourSquare API call, makes Location Objects and pushes them into a KO Observable Array, also make map markers
 	* @param {JSON} response FourSquare API data information used to create Location Objects
 	*/
-	this.createLocations = function(response, location){
+	this.createLocations = function(response){
 		console.log(response);
 		for (var i = 0; i < response.length; i++) {
 			var venue = response[i].venue;
@@ -337,6 +337,8 @@ function ViewModel(){
 			}).fail(function(){
 				swal('Sorry!', 'There was a problem retrieving the Instagram Image :(', 'error');
 			});
+		}).catch(function(error){
+			swal('Sorry!', 'There was a problem with your request: ' + error, 'error');
 		})
 	};
 
