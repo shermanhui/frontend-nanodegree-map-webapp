@@ -9,7 +9,7 @@
 /* global google, ko, swal, Q, opts, Spinner*/
 /* eslint eqeqeq: 0, quotes: 0, no-unused-vars: 0, no-shadow: 0, no-use-before-define: 0*/
 
-var map, geocoder, bounds, directionsService, directionsDisplay, infoWindow = new google.maps.InfoWindow(), spinner;
+var map, geocoder, bounds, directionsService, directionsDisplay, infoWindow, spinner;
 
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
@@ -57,6 +57,7 @@ var Location = function(data){
 * @function initializes GoogleMaps and its styles
 */
 function initMap() {
+	infoWindow = new google.maps.InfoWindow();
 	geocoder = new google.maps.Geocoder();
 	bounds = new google.maps.LatLngBounds();
 	map = new google.maps.Map(document.getElementById('map'), {
