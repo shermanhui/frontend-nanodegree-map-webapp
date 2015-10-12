@@ -86,6 +86,7 @@ None of these are required, but they may be helpful.
 - [Google Maps Style Wizard] (http://gmaps-samples-v3.googlecode.com/svn/trunk/styledmaps/wizard/index.html?utm_medium=twitter)
 - [How To Center Using An Address On Initialize] (http://stackoverflow.com/questions/6140303/google-maps-v3-how-to-center-using-an-address-on-initialize)
 - [Q Documentation] (https://github.com/kriskowal/q)
+- [How to Deloy Dist to gh-pages] (https://gist.github.com/cobyism/4730490)
 
 ## Project Overview
 
