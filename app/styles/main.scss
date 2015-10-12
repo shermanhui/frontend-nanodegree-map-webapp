@@ -236,7 +236,7 @@ and (min-width: 300px)
 and (max-width: 750px)
 and (orientation: portrait) {
 
-  // .gm-style-iw > div{ // this will make an increasingly long infowindow on each click. I also get b.setCapture is not a function
+  // .gm-style-iw { // this will make an increasingly long infowindow on each click. I also get b.setCapture is not a function
   //   height: 100% !important;
   //   overflow: auto !important;
   //   width: auto !important;
