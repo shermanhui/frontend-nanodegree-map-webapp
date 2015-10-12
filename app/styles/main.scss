@@ -20,8 +20,11 @@ html, body {
   margin: 0;
   padding: 0;
 }
+.infowindow-text-center {
+  text-align: center;
+}
 
-.text-spacing{
+.text-spacing {
   letter-spacing: 0.8em;
 }
 
@@ -229,27 +232,49 @@ html, body {
 
 /* For Smaller Devices */
 @media only screen
-and (min-width: 340px)
-and (max-width: 750px) {
+and (min-width: 300px)
+and (max-width: 750px)
+and (orientation: portrait) {
+
+  // .gm-style-iw > div{ // this will make an increasingly long infowindow on each click. I also get b.setCapture is not a function
+  //   height: 100% !important;
+  //   overflow: auto !important;
+  //   width: auto !important;
+  // }
+
   #directions-container {
     visibility: hidden;
-    width: 50%;
+    //width: 50%; // these height/width values seem to be affecting the infowindows
   }
 
   #placeList {
     visibility: hidden;
-    height: 50%;
-    width: 50%;
+    //height: 50%;
+    //width: 50%;
     overflow-y: auto;
     font-size: 1.5em;
     padding: 0;
   }
+
+  #about-section #instructions p {
+    font-size: 0.7em;
+  }
 }
 
 @media only screen
-and (min-device-width: 335px)
+and (min-device-width: 300px)
 and (max-device-width: 750px)
 and (orientation: landscape) {
+  // #map {
+  //   max-width: none;
+  // }
+
+  // .gm-style-iw{
+  //   height: 100% !important;
+  //   overflow: hidden !important;
+  //   width: auto !important;
+  // }
+
   #directions-container {
     visibility: hidden;
   }

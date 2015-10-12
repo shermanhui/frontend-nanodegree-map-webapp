@@ -38,7 +38,7 @@ var Location = function(data){
 	this.image = ko.observable(data.image);
 	this.icon = ko.observable(data.icon);
 	this.contentString = // create content string for infoWindow
-		'<div class="text-center" id="content">' +
+		'<div class="infowindow-text-center" id="info-content">' +
 		'<h1>' + self.name() + '</h1>' +
 		'<div>' +
 		'<p><b>Address and Rating</b></p>' +
