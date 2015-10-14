@@ -25,7 +25,7 @@ var BREWERY_ID = '50327c8591d4c4b30a586d5d';
 * @param {Object} data - FourSquare data includes name, lat/lng, address, rating, marker, icon and category
 */
 
-var Location = function(data){
+var Location = function(data, viewModel){
 	var self = this;
 	this.name = ko.observable(data.name);
 	this.lat = ko.observable(data.lat);
@@ -326,13 +326,14 @@ function ViewModel(){
 	*/
 
 	this.getIGImage = function(obj){
+		var self = this;
 		self.getInstagramID(obj).then(function(obj){
 			$.ajax({
 				url: 'https://api.instagram.com/v1/locations/' + obj.igID + '/media/recent?&access_token=' + IG_TOKEN + '',
 				dataType: 'jsonp'
 			}).done(function(response){
 				obj.image = response.data[0].images.standard_resolution.url;
-				self.locationsList().push(new Location(obj));
+				self.locationsList().push(new Location(obj, self));
 			}).fail(function(){
 				swal('Sorry!', 'There was a problem retrieving the Instagram Image :(', 'error');
 			});
@@ -590,7 +591,9 @@ function ViewModel(){
 	});
 }
 
-initMap(); // initialize the map
+function startAll(){
+	initMap(); // initialize the map
 
-var viewModel = new ViewModel(); // define then bind viewModel
-ko.applyBindings(viewModel);
+	var viewModel = new ViewModel(); // define then bind viewModel
+	ko.applyBindings(viewModel);
+}

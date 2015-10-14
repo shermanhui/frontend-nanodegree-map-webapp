@@ -236,15 +236,9 @@ and (min-width: 300px)
 and (max-width: 750px)
 and (orientation: portrait) {
 
-  // .gm-style-iw { // this will make an increasingly long infowindow on each click. I also get b.setCapture is not a function
-  //   height: 100% !important;
-  //   overflow: auto !important;
-  //   width: auto !important;
-  // }
-
   #directions-container {
     visibility: hidden;
-    //width: 50%; // these height/width values seem to be affecting the infowindows
+    //width: 50%;
   }
 
   #placeList {
@@ -265,15 +259,6 @@ and (orientation: portrait) {
 and (min-device-width: 300px)
 and (max-device-width: 750px)
 and (orientation: landscape) {
-  // #map {
-  //   max-width: none;
-  // }
-
-  // .gm-style-iw{
-  //   height: 100% !important;
-  //   overflow: hidden !important;
-  //   width: auto !important;
-  // }
 
   #directions-container {
     visibility: hidden;
