@@ -591,9 +591,9 @@ function ViewModel(){
 	});
 }
 
-function startAll(){
+//function startAll(){
 	initMap(); // initialize the map
 
 	var viewModel = new ViewModel(); // define then bind viewModel
 	ko.applyBindings(viewModel);
-}
+//}
