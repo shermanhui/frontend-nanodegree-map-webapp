@@ -141,7 +141,7 @@ html, body {
   position: absolute;
   //top: 25%;
   height: 50%;
-  width: 28%;
+  width: 25%;
   overflow-y: auto;
   font-size: 1.5em;
   padding: 0;
@@ -169,7 +169,7 @@ html, body {
     text-align: center;
     background: rgba(255,255,255,0.8) !important;
     height: 50%;
-    width: 26%;
+    width: 25%;
     font-size: 1.2em;
     margin: 10px 10px auto;
     border-style: solid;
@@ -241,15 +241,17 @@ and (orientation: portrait) {
 
   #directions-container {
     visibility: hidden;
-    // width: 50%;
+    padding: 0;
   }
 
   #placeList {
     visibility: hidden;
-    // height: 50%;
-    // width: 50%;
     overflow-y: auto;
     font-size: 1.5em;
+    padding: 0;
+  }
+
+  #placeList ul {
     padding: 0;
   }
 
@@ -265,10 +267,15 @@ and (orientation: landscape) {
 
   #directions-container {
     visibility: hidden;
+    padding: 0;
   }
 
   #placeList {
     visibility: hidden;
+  }
+
+  #placeList ul {
+    padding: 0;
   }
 
   #about-section #instructions p {
