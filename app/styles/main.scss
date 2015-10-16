@@ -244,6 +244,10 @@ and (orientation: portrait) {
     padding: 0;
   }
 
+  #directions-container .btn {
+    font-size: 0.8em;
+  }
+
   #placeList {
     visibility: hidden;
     overflow-y: auto;
@@ -253,6 +257,14 @@ and (orientation: portrait) {
 
   #placeList ul {
     padding: 0;
+  }
+
+  #placeList p.venue-name{
+    font-size: 0.8em;
+  }
+
+  #add, #remove {
+    font-size: 2em;
   }
 
   #about-section #instructions p {
