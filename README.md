@@ -87,6 +87,8 @@ None of these are required, but they may be helpful.
 - [How To Center Using An Address On Initialize] (http://stackoverflow.com/questions/6140303/google-maps-v3-how-to-center-using-an-address-on-initialize)
 - [Q Documentation] (https://github.com/kriskowal/q)
 - [How to Deloy Dist to gh-pages] (https://gist.github.com/cobyism/4730490)
+- [Media Queries with JS] (http://tylergaw.com/articles/reacting-to-media-queries-in-javascript)
+- [Replacing Text] (http://stackoverflow.com/questions/11324559/jquery-if-div-contains-this-text-replace-that-part-of-the-text)
 
 ## Project Overview
 
