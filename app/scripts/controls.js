@@ -46,6 +46,32 @@ $('#locations-toggle').click(function(e){
 	}
 });
 
+// change button text depending on media queries
+var mq = window.matchMedia("only screen and (min-width: 300px) and (max-width: 750px) and (orientation: portrait)");
+
+var handleMediaChange = function(mq){
+	if (mq.matches){
+		console.log('work');
+		$('.add').text(function(){
+			return $(this).text().replace('Add', '+');
+		});
+		$('.remove').text(function(){
+			return $(this).text().replace('Remove', '-');
+		});
+	} else {
+		console.log('boo');
+		$('.add').text(function(){
+			return $(this).text().replace('+', 'Add');
+		});
+		$('.remove').text(function(){
+			return $(this).text().replace('-', 'Remove');
+		});
+	}
+};
+
+mq.addListener(handleMediaChange);
+handleMediaChange(mq);
+
 // calls panelSnap.js and sets up snap functions
 var options = {
   $menu: false,
