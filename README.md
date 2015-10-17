@@ -5,6 +5,7 @@
 - Download from github.com/shui91/frontend-nanodegree-map-webapp (master branch)
 - `cd` to the directory and run `npm install` and `bower install` to make sure you have the latest dependancies
 - run `gulp serve` to run the test version or `gulp serve:dist` for a production version of the webapp
+- You may also use this [link] (http://shui91.github.io/frontend-nanodegree-map-webapp/) or `cd` into the dist/ folder and open up index.html
 - In the webapp click on "Get Started"
 - List of bars/breweries in Vancouver, BC open up as default.
 - User may search for their own location to load FourSquare's recommended drinking holes
