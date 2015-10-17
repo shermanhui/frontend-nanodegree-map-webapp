@@ -282,6 +282,15 @@ and (orientation: landscape) {
     padding: 0;
   }
 
+  #directions-container h2 {
+    font-size: 25px;
+    font-weight: bold;
+  }
+
+  #directions-container p {
+    font-size: 12px;
+  }
+
   #placeList {
     visibility: hidden;
   }

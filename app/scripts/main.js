@@ -23,6 +23,7 @@ var BREWERY_ID = '50327c8591d4c4b30a586d5d';
 * Represents a Location
 * @constructor
 * @param {Object} data - FourSquare data includes name, lat/lng, address, rating, marker, icon and category
+* @param {ViewModel} ViewModel - required to run makeMarker function
 */
 
 var Location = function(data, viewModel){
@@ -333,7 +334,7 @@ function ViewModel(){
 				dataType: 'jsonp'
 			}).done(function(response){
 				obj.image = response.data[0].images.standard_resolution.url;
-				self.locationsList().push(new Location(obj, self));
+				self.locationsList().push(new Location(obj, self)); // push self because Location constructor needs a reference to viewmodel
 			}).fail(function(){
 				swal('Sorry!', 'There was a problem retrieving the Instagram Image :(', 'error');
 			});
@@ -590,6 +591,10 @@ function ViewModel(){
 		}
 	});
 }
+
+/*
+* @description callback function to initialize app when Google Maps Script finishes loading
+*/
 
 function startAll(){
 	initMap(); // initialize the map

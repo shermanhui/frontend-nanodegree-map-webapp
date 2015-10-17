@@ -122,7 +122,7 @@
             <!-- CrawlList Directions -->
             <div class='poiret-font gray' id='directions-container'>
                 <h2>Your Crawl Route</h2>
-                <div data-bind="if: crawlList().length == 0">There aren't any locations added yet. Add some to begin!</div>
+                <p data-bind="if: crawlList().length == 0">There aren't any locations added yet. Add some to begin!</p>
                 <ol data-bind='foreach: crawlList'>
                     <li data-bind='text: $data.name()'></li>
                 </ol>
