@@ -17,11 +17,11 @@
 ## Personal Objectives
 
 Tools:
-- Knockout
-- HTML5 BoilerPlate
-- Bower
-- Gulp
-- jQuery Plugins
+- ~~Knockout~~
+- ~~HTML5 BoilerPlate~~
+- ~~Bower~~
+- ~~Gulp~~
+- ~~jQuery Plugins~~
 
 To-Dos to Meet Project Expectations:
 - ~~Responsive Design for Mobile~~
@@ -90,6 +90,9 @@ None of these are required, but they may be helpful.
 - [How to Deloy Dist to gh-pages] (https://gist.github.com/cobyism/4730490)
 - [Media Queries with JS] (http://tylergaw.com/articles/reacting-to-media-queries-in-javascript)
 - [Replacing Text] (http://stackoverflow.com/questions/11324559/jquery-if-div-contains-this-text-replace-that-part-of-the-text)
+- [InfoWindow and KO bindings pt.1] (http://stackoverflow.com/questions/32184189/knockout-js-template-attr-href-binding-returning-function-instead-of-value)
+- [InfoWindow and KO bindings pt.2] (http://stackoverflow.com/questions/31970927/binding-knockoutjs-to-google-maps-infowindow-content)
+- `git subtree push --prefix dist origin gh-pages` (for updating gh-pages)
 
 ## Project Overview
 
