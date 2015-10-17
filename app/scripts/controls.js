@@ -46,11 +46,11 @@ $('#locations-toggle').click(function(e){
 	}
 });
 
-// change button text depending on media querie#
-var mq = window.matchMedia("only screen and (min-width: 300px) and (max-width: 750px) and (orientation: portrait)");
+// listener that changes button text depending on media queries
+var mq = window.matchMedia('only screen and (min-width: 300px) and (max-width: 750px) and (orientation: portrait)');
 
-var handleMediaChange = function(mq){
-	if (mq.matches){
+var handleMediaChange = function(mediaQuery){
+	if (mediaQuery.matches){
 		$('#add').text(function(){
 			return $(this).text().replace('Add', '+');
 		});
