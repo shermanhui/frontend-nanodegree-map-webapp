@@ -1,4 +1,4 @@
-# frontend-nanodegree-map-webapp
+# Udacity's FEND P5
 
 ## How To Use:
 
