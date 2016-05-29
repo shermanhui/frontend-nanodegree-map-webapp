@@ -12,7 +12,7 @@
 - Locations are marked as Breweries (Barrels) and Pubs(Beer Glasses).
 - Users can add/remove specific venues to their crawl list
 - Users can clear the list
-- Users can click "Create Crawl" to generate a directions list to plan their pub crawl!
+- Users can click "Create Crawl" to generate directions to plan their pub crawl!
 
 ## Personal Objectives
 
